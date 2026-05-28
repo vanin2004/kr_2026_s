@@ -1,7 +1,8 @@
--- PostgreSQL initialization script
--- Create keycloak database
-CREATE DATABASE keycloak_db;
+-- PostgreSQL initialization script for Tutor Platform
+-- Database starts fresh each time, no persistent data
+-- All data is initialized in a clean slate
 
+-- Switch to tutor platform database
 \c tutor_platform_db;
 
 -- Create API schema for PostgREST
@@ -304,3 +305,8 @@ CREATE TRIGGER on_application_accepted
     AFTER UPDATE ON api.applications
     FOR EACH ROW
     EXECUTE FUNCTION api.create_chat_on_application_accepted();
+
+-- ============================================================
+-- Database initialization complete
+-- ============================================================
+-- Clean slate - no migration tables, no legacy data tracking

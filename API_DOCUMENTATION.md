@@ -84,10 +84,10 @@
 
 **Конфигурация:**
 ```
-Сервер:     http://keycloak:8080
+Сервер:     http://157.245.244.194:8080
 Realm:      tutor-platform
 Client ID:  tutor-api
-Admin URL:  http://localhost:8080/admin
+Admin URL:  http://157.245.244.194:8080/admin
 ```
 
 **Учетные данные (dev):**
@@ -102,7 +102,7 @@ Admin URL:  http://localhost:8080/admin
 
 ```bash
 # POST запрос к Keycloak
-curl -X POST http://keycloak:8080/realms/tutor-platform/protocol/openid-connect/token \
+curl -X POST http://157.245.244.194:8080/realms/tutor-platform/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password" \
   -d "client_id=tutor-api" \
@@ -129,7 +129,7 @@ curl -X POST http://keycloak:8080/realms/tutor-platform/protocol/openid-connect/
 
 ```bash
 curl -H "Authorization: Bearer <access_token>" \
-  http://localhost/api/custom/auth-check
+  http://157.245.244.194:80/api/custom/auth-check
 ```
 
 ### Структура JWT токена
@@ -168,7 +168,7 @@ curl -H "Authorization: Bearer <access_token>" \
 ### Базовый URL
 
 ```
-Разработка:  http://localhost/api/custom/
+Сервер:     http://157.245.244.194:80/api/custom/
 Production:  https://api.tutorplatform.com/api/custom/
 ```
 
@@ -194,7 +194,7 @@ POST /jobs/recalculate-ratings        → Пересчитать рейтинг�
 
 **Example запроса:**
 ```bash
-curl http://localhost/api/custom/health
+curl http://157.245.244.194:80/api/custom/health
 ```
 
 **Пример ответа (200 OK):**
@@ -218,7 +218,7 @@ curl http://localhost/api/custom/health
 
 **Пример запроса:**
 ```bash
-curl http://localhost/api/custom/db-check
+curl http://157.245.244.194:80/api/custom/db-check
 ```
 
 **Пример ответа (200 OK):**
@@ -254,7 +254,7 @@ Authorization: Bearer <jwt_token>
 **Пример запроса:**
 ```bash
 curl -H "Authorization: Bearer eyJhbGc..." \
-  http://localhost/api/custom/auth-check
+  http://157.245.244.194:80/api/custom/auth-check
 ```
 
 **Пример ответа (200 OK):**
@@ -297,7 +297,7 @@ curl -H "Authorization: Bearer eyJhbGc..." \
 
 **Пример запроса:**
 ```bash
-curl -X POST http://localhost/api/custom/test-data \
+curl -X POST http://157.245.244.194:80/api/custom/test-data \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test_tutor@example.com",
@@ -389,7 +389,7 @@ curl -X POST http://localhost/api/custom/test-data \
 #### Пример запроса
 
 ```bash
-curl -X POST http://localhost/api/custom/suggestions \
+curl -X POST http://157.245.244.194:80/api/custom/suggestions \
   -H "Authorization: Bearer eyJhbGc..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -516,7 +516,7 @@ overall_rating = (efficiency_rating × 0.4) + (communication_rating × 0.6)
 #### Пример запроса
 
 ```bash
-curl -X POST http://localhost/api/custom/jobs/recalculate-ratings \
+curl -X POST http://157.245.244.194:80/api/custom/jobs/recalculate-ratings \
   -H "Authorization: Bearer eyJhbGc..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -648,7 +648,7 @@ curl -X POST http://localhost/api/custom/jobs/recalculate-ratings \
 #### Шаг 1: Получить токен доступа
 
 ```bash
-TOKEN=$(curl -s -X POST http://keycloak:8080/realms/tutor-platform/protocol/openid-connect/token \
+TOKEN=$(curl -s -X POST http://157.245.244.194:8080/realms/tutor-platform/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password" \
   -d "client_id=tutor-api" \
@@ -662,13 +662,13 @@ echo "Token: $TOKEN"
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  http://localhost/api/custom/auth-check | jq
+  http://157.245.244.194:80/api/custom/auth-check | jq
 ```
 
 #### Шаг 3: Получить рекомендации
 
 ```bash
-curl -X POST http://localhost/api/custom/suggestions \
+curl -X POST http://157.245.244.194:80/api/custom/suggestions \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -695,7 +695,7 @@ curl -X POST http://localhost/api/custom/suggestions \
 #### Шаг 1: Аутентифицироваться как администратор
 
 ```bash
-ADMIN_TOKEN=$(curl -s -X POST http://keycloak:8080/realms/tutor-platform/protocol/openid-connect/token \
+ADMIN_TOKEN=$(curl -s -X POST http://157.245.244.194:8080/realms/tutor-platform/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password" \
   -d "client_id=tutor-api" \
@@ -706,7 +706,7 @@ ADMIN_TOKEN=$(curl -s -X POST http://keycloak:8080/realms/tutor-platform/protoco
 #### Шаг 2: Запустить пересчет рейтингов
 
 ```bash
-curl -X POST http://localhost/api/custom/jobs/recalculate-ratings \
+curl -X POST http://157.245.244.194:80/api/custom/jobs/recalculate-ratings \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -723,7 +723,7 @@ curl -X POST http://localhost/api/custom/jobs/recalculate-ratings \
 
 ```bash
 for i in {1..3}; do
-  curl -X POST http://localhost/api/custom/test-data \
+  curl -X POST http://157.245.244.194:80/api/custom/test-data \
     -H "Content-Type: application/json" \
     -d "{
       \"email\": \"tutor$i@example.com\",
@@ -1018,19 +1018,19 @@ docker-compose up -d
 
 ```bash
 # FastAPI
-curl http://localhost/api/custom/health
+curl http://157.245.244.194:80/api/custom/health
 
 # Database
-curl http://localhost/api/custom/db-check
+curl http://157.245.244.194:80/api/custom/db-check
 
 # Keycloak (admin console)
-open http://localhost:8080/admin
+open http://157.245.244.194:8080/admin
 ```
 
 ### 3. Получить токен
 
 ```bash
-TOKEN=$(curl -s -X POST http://localhost:8080/realms/tutor-platform/protocol/openid-connect/token \
+TOKEN=$(curl -s -X POST http://157.245.244.194:8080/realms/tutor-platform/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password" \
   -d "client_id=tutor-api" \
@@ -1043,7 +1043,7 @@ echo $TOKEN
 ### 4. Добавить тестовых репетиторов
 
 ```bash
-curl -X POST http://localhost/api/custom/test-data \
+curl -X POST http://157.245.244.194:80/api/custom/test-data \
   -H "Content-Type: application/json" \
   -d '{
     "email": "math_tutor@example.com",
@@ -1058,7 +1058,7 @@ curl -X POST http://localhost/api/custom/test-data \
 ### 5. Получить рекомендации
 
 ```bash
-curl -X POST http://localhost/api/custom/suggestions \
+curl -X POST http://157.245.244.194:80/api/custom/suggestions \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{

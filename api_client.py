@@ -2,8 +2,10 @@
 """
 Tutor Platform API Client
 Скрипт для интеграции и тестирования API платформы поиска репетиторов
+Предназначен для запуска на удаленном сервере через Python
 """
 
+import os
 import sys
 import time
 from dataclasses import dataclass
@@ -17,12 +19,13 @@ import requests
 @dataclass
 class Config:
     """Конфигурация клиента"""
-    base_url: str = "http://localhost"
-    keycloak_url: str = "http://keycloak:8080"
+    base_url: str = os.getenv("API_BASE_URL", "http://157.245.244.194:80")
+    keycloak_url: str = os.getenv("KEYCLOAK_URL", "http://157.245.244.194:8080")
     realm: str = "tutor-platform"
     client_id: str = "tutor-api"
-    timeout: int = 10
+    timeout: int = 30
     verify_ssl: bool = False
+    debug: bool = os.getenv("DEBUG", "false").lower() == "true"
 
 
 class APIError(Exception):
