@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: mgtu_postgres
+    environment:
+      POSTGRES_USER: tutordb_user
+      POSTGRES_PASSWORD: tutordb_pass
+      POSTGRES_DB: tutor_platform_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - tutor_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tutordb_user -d tutor_platform_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Keycloak (Authentication & Authorization)
+  keycloak:
+    image: keycloak/keycloak:latest
+    container_name: mgtu_keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin_password
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: tutordb_user
+      KC_DB_PASSWORD: tutordb_pass
+      KC_PROXY: edge
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - tutor_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+
+  # PostgREST (Zero-code REST API)
+  postgrest:
+    image: postgrest/postgrest:latest
+    container_name: mgtu_postgrest
+    environment:
+      PGRST_DB_URI: postgresql://tutordb_user:tutordb_pass@postgres:5432/tutor_platform_db
+      PGRST_DB_SCHEMA: api
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_ROLE_CLAIM_KEY: '.realm_access.roles[0]'
+      PGRST_JWT_SECRET: |
+        {"jwks_uri": "http://keycloak:8080/realms/tutor-platform/protocol/openid-connect/certs"}
+    ports:
+      - "3000:3000"
+    networks:
+      - tutor_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # FastAPI (Custom Business Logic)
+  fastapi:
+    build:
+      context: ./fastapi
+      dockerfile: Dockerfile
+    container_name: mgtu_fastapi
+    environment:
+      DATABASE_URL: postgresql://tutordb_user:tutordb_pass@postgres:5432/tutor_platform_db
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: tutor-platform
+      KEYCLOAK_CLIENT_ID: tutor-api
+      KEYCLOAK_CLIENT_SECRET: your-client-secret
+    ports:
+      - "8000:8000"
+    networks:
+      - tutor_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    volumes:
+      - ./fastapi/src:/app/src
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Nginx (API Gateway & Reverse Proxy)
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: mgtu_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - tutor_network
+    depends_on:
+      - fastapi
+      - postgrest
+      - keycloak
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+
+volumes:
+  postgres_data:
+  keycloak_data:
+
+networks:
+  tutor_network:
+    driver: bridge

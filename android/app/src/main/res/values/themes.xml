@@ -1,0 +1,13 @@
+<resources>
+    <style name="Theme.TutorPlatform" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryVariant">@color/brand_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/brand_secondary</item>
+        <item name="colorSecondaryVariant">@color/brand_tertiary</item>
+        <item name="colorOnSecondary">@color/brand_dark</item>
+        <item name="android:statusBarColor">@color/brand_dark</item>
+        <item name="android:windowBackground">@color/brand_light</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+</resources>

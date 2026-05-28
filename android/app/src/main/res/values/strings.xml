@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Платформа репетиторов</string>
+    <string name="nav_search">Поиск</string>
+    <string name="nav_chats">Чаты</string>
+    <string name="nav_calendar">Календарь</string>
+    <string name="nav_progress">Прогресс</string>
+    <string name="nav_profile">Профиль</string>
+    <string name="nav_dashboard">Дашборд</string>
+    <string name="nav_schedule">Расписание</string>
+    <string name="nav_requests">Заявки</string>
+    <string name="nav_students">Ученики</string>
+</resources>

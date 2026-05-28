@@ -1,0 +1,86 @@
+[
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_test.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_test.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_student_progress.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_student_progress.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_student_search.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_student_search.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_tutor_main.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_tutor_main.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_tutor_profile.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_tutor_profile.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_tutor_schedule.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_tutor_schedule.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_student_main.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_student_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_lesson_detail.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_lesson_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_chat.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_chat.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\item_application.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\item_application.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_student_profile.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_student_profile.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_student_calendar.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_student_calendar.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_login.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_tutor_dashboard.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_tutor_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_splash.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_tutor_requests.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_tutor_requests.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_student_chats.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_student_chats.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\item_simple.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\item_simple.xml"
+    },
+    {
+        "merged": "com.tutorplatform.app-mergeDebugResources-35:/layout/fragment_tutor_students.xml",
+        "source": "com.tutorplatform.app-main-38:/layout/fragment_tutor_students.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\item_message.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\item_message.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-mergeDebugResources-35:\\layout\\activity_tutor_detail.xml",
+        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_tutor_detail.xml"
+    }
+]

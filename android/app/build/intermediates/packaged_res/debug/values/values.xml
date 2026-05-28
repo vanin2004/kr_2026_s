@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#3C6E71</color>
+    <color name="brand_dark">#1F2433</color>
+    <color name="brand_light">#F5F1E8</color>
+    <color name="brand_primary">#2E3A59</color>
+    <color name="brand_secondary">#E9B44C</color>
+    <color name="brand_tertiary">#D6605A</color>
+    <color name="ic_launcher_background">#2E3A59</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text_primary">#1D1D1F</color>
+    <color name="text_secondary">#4B4F5C</color>
+    <color name="white">#FFFFFF</color>
+    <dimen name="corner_lg">24dp</dimen>
+    <dimen name="corner_md">16dp</dimen>
+    <dimen name="corner_sm">8dp</dimen>
+    <dimen name="elevation_md">6dp</dimen>
+    <dimen name="elevation_sm">2dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xs">4dp</dimen>
+    <string name="app_name">Платформа репетиторов</string>
+    <string name="nav_calendar">Календарь</string>
+    <string name="nav_chats">Чаты</string>
+    <string name="nav_dashboard">Дашборд</string>
+    <string name="nav_profile">Профиль</string>
+    <string name="nav_progress">Прогресс</string>
+    <string name="nav_requests">Заявки</string>
+    <string name="nav_schedule">Расписание</string>
+    <string name="nav_search">Поиск</string>
+    <string name="nav_students">Ученики</string>
+    <style name="Theme.TutorPlatform" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryVariant">@color/brand_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/brand_secondary</item>
+        <item name="colorSecondaryVariant">@color/brand_tertiary</item>
+        <item name="colorOnSecondary">@color/brand_dark</item>
+        <item name="android:statusBarColor">@color/brand_dark</item>
+        <item name="android:windowBackground">@color/brand_light</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+</resources>

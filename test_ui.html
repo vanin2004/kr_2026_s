@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Test UI - Tutor Platform API</title>
+</head>
+<body>
+    <h1>Тестовый UI для API Платформы</h1>
+    <p>Базовый URL: <input type="text" id="baseUrl" value="http://localhost:8000"></p>
+
+    <hr>
+
+    <h3>1. Проверка работоспособности (Health Check)</h3>
+    <button onclick="testHealth()">GET /health</button>
+    <pre id="healthRes"></pre>
+
+    <hr>
+
+    <h3>2. Проверка БД (DB Check)</h3>
+    <button onclick="testDb()">GET /api/custom/db-check</button>
+    <pre id="dbRes"></pre>
+
+    <hr>
+
+    <h3>3. Ранжирование репетиторов (Suggestions)</h3>
+    <div>
+        <label>Предмет:</label> <input type="text" id="subject" value="Математика"><br>
+        <label>Макс. ставка:</label> <input type="number" id="maxRate" value="2000"><br>
+        <label>Мин. опыт (лет):</label> <input type="number" id="minExp" value="3"><br>
+        <label>Желаемые теги (через запятую):</label> <input type="text" id="tags" value="ОГЭ,ЕГЭ"><br>
+        <button onclick="testSuggestions()">POST /api/custom/suggestions</button>
+    </div>
+    <pre id="suggestionsRes"></pre>
+
+    <hr>
+
+    <h3>4. Пересчет рейтингов (Recalculate Ratings Job)</h3>
+    <div>
+        <label><input type="checkbox" id="runEff" checked> Пересчитать эффективность (run_efficiency)</label><br>
+        <label><input type="checkbox" id="runComm" checked> Пересчитать коммуникативность (run_communication)</label><br>
+        <button onclick="testJobs()">POST /api/custom/jobs/recalculate-ratings</button>
+    </div>
+    <pre id="jobsRes"></pre>
+
+    <hr>
+
+    <h3>5. Авторизация (Получение токена из Keycloak)</h3>
+    <div>
+        <label>Логин:</label> <input type="text" id="kcUser" value="test_tutor"><br>
+        <label>Пароль:</label> <input type="password" id="kcPass" value="password"><br>
+        <button onclick="loginKeycloak()">Войти и получить токен</button>
+    </div>
+    <pre id="loginRes"></pre>
+
+    <hr>
+
+    <h3>6. Проверка авторизации (Auth Check)</h3>
+    <div>
+        <label>Bearer Token:</label> <input type="text" id="authToken" placeholder="ey..." style="width: 300px;"><br>
+        <button onclick="testAuth()">GET /api/custom/auth-check</button>
+    </div>
+    <pre id="authRes"></pre>
+
+    <hr>
+
+    <h3>7. Добавить тестовые данные (репетитора)</h3>
+    <div>
+        <label>ФИО:</label> <input type="text" id="testName" value="Иван Иванов"><br>
+        <label>Предмет:</label> <input type="text" id="testSubj" value="Математика"><br>
+        <label>Ставка (в час):</label> <input type="number" id="testRate" value="1500"><br>
+        <label>Опыт (лет):</label> <input type="number" id="testExp" value="5"><br>
+        <button onclick="testAddData()">POST /api/custom/test-data</button>
+    </div>
+    <pre id="addDataRes"></pre>
+
+    <script>
+        function getBaseUrl() {
+            return document.getElementById("baseUrl").value;
+        }
+
+        async function request(endpoint, method = "GET", body = null, token = null) {
+            const url = getBaseUrl() + endpoint;
+            const headers = {
+                "Content-Type": "application/json"
+            };
+            if (token) {
+                headers["Authorization"] = "Bearer " + token;
+            }
+            const options = {
+                method,
+                headers
+            };
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                return JSON.stringify(data, null, 2);
+            } catch (err) {
+                return "Ошибка: " + err.message;
+            }
+        }
+
+        async function testHealth() {
+            document.getElementById("healthRes").innerText = "Загрузка...";
+            document.getElementById("healthRes").innerText = await request("/health");
+        }
+
+        async function testDb() {
+            document.getElementById("dbRes").innerText = "Загрузка...";
+            document.getElementById("dbRes").innerText = await request("/api/custom/db-check");
+        }
+
+        async function testSuggestions() {
+            document.getElementById("suggestionsRes").innerText = "Загрузка...";
+            const reqBody = {
+                subject: document.getElementById("subject").value,
+                max_rate: parseInt(document.getElementById("maxRate").value) || null,
+                min_experience: parseInt(document.getElementById("minExp").value) || null,
+                desired_tags: document.getElementById("tags").value.split(",").map(t => t.trim()).filter(t => t),
+                weight_efficiency: 0.3,
+                weight_communication: 0.15,
+                weight_expertise: 0.2,
+                weight_responsiveness: 0.15,
+                weight_tags: 0.2
+            };
+            document.getElementById("suggestionsRes").innerText = await request("/api/custom/suggestions", "POST", reqBody);
+        }
+
+        async function testJobs() {
+            document.getElementById("jobsRes").innerText = "Загрузка...";
+            const reqBody = {
+                run_efficiency: document.getElementById("runEff").checked,
+                run_communication: document.getElementById("runComm").checked
+            };
+            document.getElementById("jobsRes").innerText = await request("/api/custom/jobs/recalculate-ratings", "POST", reqBody);
+        }
+
+        async function loginKeycloak() {
+            document.getElementById("loginRes").innerText = "Авторизация...";
+            const kcUser = document.getElementById("kcUser").value;
+            const kcPass = document.getElementById("kcPass").value;
+            
+            const params = new URLSearchParams();
+            params.append('client_id', 'tutor-frontend');
+            params.append('grant_type', 'password');
+            params.append('username', kcUser);
+            params.append('password', kcPass);
+
+            try {
+                // Keycloak endpoint
+                const response = await fetch("http://localhost:8080/realms/tutor-platform/protocol/openid-connect/token", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params
+                });
+                
+                const data = await response.json();
+                if (data.access_token) {
+                    document.getElementById("authToken").value = data.access_token;
+                    document.getElementById("loginRes").innerText = "Успешно! Токен добавлен в поле ниже.\n" + 
+                                                                    "Роли пользователя: " + JSON.parse(atob(data.access_token.split('.')[1])).realm_access.roles;
+                } else {
+                    document.getElementById("loginRes").innerText = "Ошибка: " + JSON.stringify(data, null, 2);
+                }
+            } catch (err) {
+                document.getElementById("loginRes").innerText = "Network Error: " + err.message;
+            }
+        }
+
+        async function testAuth() {
+            document.getElementById("authRes").innerText = "Загрузка...";
+            const token = document.getElementById("authToken").value;
+            document.getElementById("authRes").innerText = await request("/api/custom/auth-check", "GET", null, token);
+        }
+
+        async function testAddData() {
+            document.getElementById("addDataRes").innerText = "Загрузка...";
+            const reqBody = {
+                full_name: document.getElementById("testName").value,
+                specialization: document.getElementById("testSubj").value,
+                hourly_rate: parseInt(document.getElementById("testRate").value) || 0,
+                experience_years: parseInt(document.getElementById("testExp").value) || 0
+            };
+            document.getElementById("addDataRes").innerText = await request("/api/custom/test-data", "POST", reqBody);
+        }
+    </script>
+</body>
+</html>
