@@ -1,9 +1,8 @@
 from unittest.mock import AsyncMock, patch
 
 import pytest
-
-from ..schemas.suggestions import SuggestionRequest, SuggestionWeights
-from ..services.recommendation import RecommendationService
+from schemas.suggestions import SuggestionRequest, SuggestionWeights
+from services.recommendation import RecommendationService
 
 
 @pytest.mark.asyncio
@@ -50,7 +49,7 @@ async def test_recommendation_logic():
         )
     )
 
-    with patch('backend.app.db.session.db_pool.fetch', new_callable=AsyncMock) as mock_fetch:
+    with patch('db.session.db_pool.fetch', new_callable=AsyncMock) as mock_fetch:
         mock_fetch.return_value = mock_db_rows
         
         results = await RecommendationService.get_suggestions(request)

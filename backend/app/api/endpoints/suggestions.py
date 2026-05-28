@@ -1,9 +1,8 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException
-
-from ...schemas.suggestions import SuggestionRequest, SuggestionResponse
-from ...services.recommendation import RecommendationService
+from schemas.suggestions import SuggestionRequest, SuggestionResponse
+from services.recommendation import RecommendationService
 
 # from ...core.auth import get_current_user # To be implemented if needed
 

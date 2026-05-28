@@ -2,8 +2,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
-
-from ..main import app
+from main import app
 
 client = TestClient(app)
 
@@ -15,7 +14,7 @@ async def test_user_created_webhook():
         "realmRole": "tutor"
     }
     
-    with patch('backend.app.db.session.db_pool.execute', new_callable=AsyncMock) as mock_execute:
+    with patch('db.session.db_pool.execute', new_callable=AsyncMock) as mock_execute:
         # We need to mock the db_pool.connect as well if we use the real app object
         # but since we are mocking execute, we can just bypass the connection for this test
         # or use a mock for the whole db_pool

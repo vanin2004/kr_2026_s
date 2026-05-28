@@ -1,9 +1,8 @@
 import logging
 
+from db.session import db_pool
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-
-from ...db.session import db_pool
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

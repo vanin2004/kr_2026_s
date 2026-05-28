@@ -1,7 +1,7 @@
 from typing import List
 
-from ..db.session import db_pool
-from ..schemas.suggestions import ScoreBreakdown, SuggestionRequest, SuggestionResponse
+from db.session import db_pool
+from schemas.suggestions import ScoreBreakdown, SuggestionRequest, SuggestionResponse
 
 
 class RecommendationService:
@@ -92,4 +92,4 @@ class RecommendationService:
         results.sort(key=lambda x: x.score, reverse=True)
         return results
 
-from ..schemas.suggestions import SuggestionWeights
+from schemas.suggestions import SuggestionWeights

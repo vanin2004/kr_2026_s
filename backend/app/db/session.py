@@ -1,6 +1,5 @@
 import asyncpg
-
-from ..core.config import settings
+from core.config import settings
 
 
 class DatabasePool:
