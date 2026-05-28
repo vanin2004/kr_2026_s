@@ -1,16 +1,12 @@
-import os
 import unittest
 
 import requests
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
 
 class TestTutorAppAPI(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.base_url = os.getenv("BASE_URL", "http://localhost:8000").rstrip("/")
+        cls.base_url = "http://157.245.244.194:80"
         cls.data_api_url = f"{cls.base_url}/api/data"
         cls.custom_api_url = f"{cls.base_url}/api/custom"
         
@@ -18,7 +14,6 @@ class TestTutorAppAPI(unittest.TestCase):
         """Test fetching tutor profiles (Public)"""
         url = f"{self.data_api_url}/tutor_profiles"
         response = requests.get(url)
-        # We expect 200 OK or 404 if no data, but 200 is the standard for a valid endpoint
         self.assertIn(response.status_code, [200, 404])
         if response.status_code == 200:
             self.assertIsInstance(response.json(), list)

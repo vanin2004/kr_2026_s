@@ -1,9 +1,10 @@
 import asyncio
 
-from api.endpoints import internal, suggestions
-from db.session import db_pool
 from fastapi import FastAPI
-from services.notifications import notification_service
+
+from .api.endpoints import internal, suggestions
+from .db.session import db_pool
+from .services.notifications import notification_service
 
 app = FastAPI(title="TutorApp Custom Logic API")
 
