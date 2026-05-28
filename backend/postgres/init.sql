@@ -199,6 +199,9 @@ CREATE POLICY "Participants see own lessons" ON api.lessons FOR SELECT USING (
 CREATE POLICY "Tutors manage lessons" ON api.lessons FOR ALL USING (
     tutor_id = current_setting('request.jwt.claim.sub', true)::uuid
 );
+CREATE POLICY "Students create lessons" ON api.lessons FOR INSERT WITH CHECK (
+    student_id = current_setting('request.jwt.claim.sub', true)::uuid
+);
 
 -- 4. Чаты и сообщения
 CREATE POLICY "Participants see chat" ON api.chats FOR SELECT USING (
@@ -223,6 +226,9 @@ CREATE POLICY "Participants send messages" ON api.messages FOR INSERT WITH CHECK
 -- 5. Тестирование и оценки (Read only for users, system will write results)
 CREATE POLICY "Students see own results" ON api.student_results FOR SELECT USING (
     student_id = current_setting('request.jwt.claim.sub', true)::uuid OR tutor_id = current_setting('request.jwt.claim.sub', true)::uuid
+);
+CREATE POLICY "Students create own results" ON api.student_results FOR INSERT WITH CHECK (
+    student_id = current_setting('request.jwt.claim.sub', true)::uuid
 );
 
 -- 6. Отзывы
