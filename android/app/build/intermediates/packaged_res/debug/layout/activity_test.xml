@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_lg">
+
+        <TextView
+            android:id="@+id/test_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Вопрос 1 из 10"
+            android:textColor="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/test_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="Текст вопроса"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/test_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:text="Подсказка"
+            android:textColor="@color/text_secondary"
+            android:visibility="gone" />
+
+        <RadioGroup
+            android:id="@+id/test_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md">
+
+            <RadioButton
+                android:id="@+id/option_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Вариант 1" />
+
+            <RadioButton
+                android:id="@+id/option_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Вариант 2" />
+
+            <RadioButton
+                android:id="@+id/option_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Вариант 3" />
+
+            <RadioButton
+                android:id="@+id/option_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Вариант 4" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/test_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:background="@drawable/bg_button_primary"
+            android:text="Далее"
+            android:textColor="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/test_submit_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</ScrollView>
