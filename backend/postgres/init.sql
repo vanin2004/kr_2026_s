@@ -2,6 +2,9 @@
 -- Database starts fresh each time, no persistent data
 -- All data is initialized in a clean slate
 
+-- Create keycloak database (required by Keycloak service)
+CREATE DATABASE keycloak_db;
+
 -- Switch to tutor platform database
 \c tutor_platform_db;
 

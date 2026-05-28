@@ -6,8 +6,9 @@ Database Initialization Script
 """
 
 import sys
-from typing import List, Dict, Any
-from api_client import TutorPlatformClient, APIError
+from typing import Any, Dict, List
+
+from api_client import APIError, TutorPlatformClient
 
 
 def print_header(text: str):

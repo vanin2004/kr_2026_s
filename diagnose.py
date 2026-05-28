@@ -5,8 +5,8 @@ Diagnostic script for Tutor Platform
 """
 
 import sys
-import time
-from api_client import TutorPlatformClient, APIError
+
+from api_client import APIError, TutorPlatformClient
 
 
 def print_header(text: str):
@@ -61,7 +61,7 @@ def test_database_connection():
     
     try:
         response = client._request("GET", "/db-check")
-        print_success(f"Database is connected")
+        print_success("Database is connected")
         print(f"   Database: {response.get('database_name', 'unknown')}")
         print(f"   PostgreSQL: {response.get('postgres_version', 'unknown')}")
         return True
@@ -166,7 +166,7 @@ def run_diagnostics():
     """Запустить полную диагностику"""
     print_header("TUTOR PLATFORM - DIAGNOSTIC TEST")
     
-    print(f"Configuration:")
+    print("Configuration:")
     config = TutorPlatformClient().config
     print(f"  API URL: {config.base_url}")
     print(f"  Keycloak URL: {config.keycloak_url}")
