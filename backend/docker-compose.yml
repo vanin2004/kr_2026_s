@@ -25,8 +25,7 @@ services:
     image: keycloak/keycloak:latest
     container_name: mgtu_keycloak
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin_password
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin_password
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
       KC_DB_USERNAME: tutordb_user

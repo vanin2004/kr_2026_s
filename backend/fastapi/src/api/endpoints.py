@@ -14,6 +14,20 @@ from src.services.suggestions import get_suggestions
 
 router = APIRouter()
 
+@router.get("/db-check")
+async def database_check(db: AsyncSession = Depends(get_db)):
+    """Check database connection"""
+    try:
+        result = await db.execute(text("SELECT 1"))
+        return {"status": "ok", "db_alive": result.scalar() == 1}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
+
+@router.get("/health")
+async def health():
+    """Health check endpoint"""
+    return {"status": "ok", "service": "tutor-platform-api"}
+
 class TestTutorCreate(BaseModel):
     full_name: str
     specialization: str
