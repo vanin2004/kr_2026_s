@@ -12,6 +12,18 @@ CREATE DATABASE keycloak_db;
 CREATE SCHEMA IF NOT EXISTS api;
 SET search_path TO api, public;
 
+-- Migration tracking tables (empty, for compatibility with migration tools)
+CREATE TABLE IF NOT EXISTS public.databasechangeloglock (
+    ID INT NOT NULL PRIMARY KEY,
+    LOCKED BOOLEAN NOT NULL DEFAULT FALSE,
+    LOCKGRANTED TIMESTAMP,
+    LOCKEDBY VARCHAR(255)
+);
+
+INSERT INTO public.databasechangeloglock (ID, LOCKED) 
+VALUES (1, FALSE) 
+ON CONFLICT DO NOTHING;
+
 -- ENUMs
 CREATE TYPE api.user_role AS ENUM ('tutor', 'student');
 CREATE TYPE api.lesson_status AS ENUM ('planned', 'completed', 'cancelled');
