@@ -32,3 +32,14 @@ services:
       - "80:80"
     depends_on:
       - postgrest
+      - custom-api
+
+  custom-api:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/tutorapp
+    depends_on:
+      db:
+        condition: service_healthy
