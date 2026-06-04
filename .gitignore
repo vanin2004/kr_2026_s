@@ -38,9 +38,9 @@ android/local.properties
 # --- IDE ---
 .idea/
 .vscode/
+.continue/
 
 # --- Environment ---
-.env
 .env.local
 .env.*.local
 
