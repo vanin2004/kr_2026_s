@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-30:12
-INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-30:12
-INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-30:12
-INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-30:12
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-31:12
+INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-31:12
+INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-31:12
+INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:1:1-31:12
 MERGED from [androidx.databinding:viewbinding:8.2.2] C:\Users\Anastasia\.gradle\caches\transforms-3\cc0b72b02bdcd59079ede77e6baa02ac\transformed\viewbinding-8.2.2\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\Anastasia\.gradle\caches\transforms-3\80f75778fa039f2e19e238352f3ff3ed\transformed\material-1.12.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Anastasia\.gradle\caches\transforms-3\3a9c143dc806935c0544adcf7cccee2c\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
@@ -65,8 +65,8 @@ ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app
 	android:name
 		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:3:22-64
 application
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:5:5-29:19
-INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:5:5-29:19
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:5:5-30:19
+INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:5:5-30:19
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\Anastasia\.gradle\caches\transforms-3\80f75778fa039f2e19e238352f3ff3ed\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\Anastasia\.gradle\caches\transforms-3\80f75778fa039f2e19e238352f3ff3ed\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Anastasia\.gradle\caches\transforms-3\3a9c143dc806935c0544adcf7cccee2c\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -123,42 +123,48 @@ ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app
 		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:22:52-76
 	android:name
 		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:22:19-51
+activity#com.tutorplatform.app.ui.RegistrationActivity
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:23:9-86
+	android:exported
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:23:59-83
+	android:name
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:23:19-58
 activity#com.tutorplatform.app.ui.StudentMainActivity
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:23:9-85
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:24:9-85
 	android:exported
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:23:58-82
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:24:58-82
 	android:name
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:23:19-57
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:24:19-57
 activity#com.tutorplatform.app.ui.TutorMainActivity
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:24:9-83
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:25:9-83
 	android:exported
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:24:56-80
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:25:56-80
 	android:name
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:24:19-55
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:25:19-55
 activity#com.tutorplatform.app.ui.TutorDetailActivity
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:25:9-85
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:26:9-85
 	android:exported
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:25:58-82
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:26:58-82
 	android:name
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:25:19-57
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:26:19-57
 activity#com.tutorplatform.app.ui.ChatActivity
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:26:9-78
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:27:9-78
 	android:exported
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:26:51-75
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:27:51-75
 	android:name
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:26:19-50
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:27:19-50
 activity#com.tutorplatform.app.ui.LessonDetailActivity
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:27:9-86
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:28:9-86
 	android:exported
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:27:59-83
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:28:59-83
 	android:name
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:27:19-58
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:28:19-58
 activity#com.tutorplatform.app.ui.TestActivity
-ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:28:9-78
+ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:29:9-78
 	android:exported
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:28:51-75
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:29:51-75
 	android:name
-		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:28:19-50
+		ADDED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml:29:19-50
 uses-sdk
 INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Anastasia\Desktop\Git_Projects\kr_2026\kr_2026_s\android\app\src\main\AndroidManifest.xml

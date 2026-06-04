@@ -1,7 +1,6 @@
 package com.tutorplatform.app.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ProgressBar
@@ -87,7 +86,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun openRegistration() {
-        val url = "${AppConfig.KEYCLOAK_BASE_URL}realms/${AppConfig.KEYCLOAK_REALM}/protocol/openid-connect/registrations?client_id=${AppConfig.KEYCLOAK_CLIENT_ID}"
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        startActivity(Intent(this, RegistrationActivity::class.java))
     }
 }

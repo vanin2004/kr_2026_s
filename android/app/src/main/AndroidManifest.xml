@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.LoginActivity" android:exported="false" />
+        <activity android:name=".ui.RegistrationActivity" android:exported="false" />
         <activity android:name=".ui.StudentMainActivity" android:exported="false" />
         <activity android:name=".ui.TutorMainActivity" android:exported="false" />
         <activity android:name=".ui.TutorDetailActivity" android:exported="false" />

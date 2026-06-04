@@ -3526,6 +3526,8 @@ id progress_horizontal
 id radio
 id ratio
 id rectangles
+id registration_progress
+id registration_webview
 id report_drawn
 id requests_list
 id requests_progress
@@ -3866,6 +3868,7 @@ layout abc_tooltip
 layout activity_chat
 layout activity_lesson_detail
 layout activity_login
+layout activity_registration
 layout activity_splash
 layout activity_student_main
 layout activity_test
