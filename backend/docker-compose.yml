@@ -38,7 +38,7 @@ services:
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_HTTP_RELATIVE_PATH: /auth
-      KC_HOSTNAME_URL: ${EXTERNAL_SERVERNAME:-http://localhost}
+      KC_HOSTNAME_URL: ${EXTERNAL_SERVERNAME:-http://localhost}/auth
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KEYCLOAK_ADMIN: admin

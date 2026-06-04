@@ -3,35 +3,106 @@ info:
   title: "TutorApp — Keycloak IAM Service"
   version: "1.0.0"
   description: |
-    Сервис аутентификации и авторизации на базе Keycloak.
+    # 🔐 Keycloak IAM — вся информация для Android-разработчика
 
-    Realm: `tutorapp`
-    Клиент: `tutorapp-client` (public)
-    Роли: `tutor`, `student`
+    ## Базовые константы
+    | Параметр | Значение |
+    |---|---|
+    | **Server** | `http://{SERVER_IP}` |
+    | **Base path** | `/auth` |
+    | **Realm** | `tutorapp` |
+    | **Client ID** | `tutorapp-client` (public — без секрета) |
+    | **Роли** | `tutor`, `student` |
 
-    Через Nginx проксируется по префиксу `/auth/`.
-    Например: `POST /auth/realms/tutorapp/protocol/openid-connect/token`
+    ## Полные URL для Android
+    ```
+    Login (получение токена):    POST http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/token
+    Refresh token:               POST http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/token
+    Logout:                      POST http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/logout
+    Регистрация (WebView):       GET  http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/auth?...параметры...
+    Получить JWKS ключи:         GET  http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/certs
+    Userinfo:                    GET  http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/userinfo
+    ```
+
+    ## ⚠️ Как открывать регистрацию в WebView
+    **НЕЛЬЗЯ** использовать `/auth/realms/tutorapp/protocol/openid-connect/registrations`.
+    Этот endpoint НЕ работает через GET в браузере/WebView.
+
+    **ПРАВИЛЬНЫЙ URL для WebView** (все параметры обязательны):
+    ```
+    http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/auth
+        ?client_id=tutorapp-client
+        &response_type=code
+        &scope=openid
+        &redirect_uri=http://localhost/registration/callback
+        &kc_action=register
+    ```
+
+    **После успешной регистрации** Keycloak сделает редирект на:
+    ```
+    http://localhost/registration/callback?code=<authorization_code>&state=...
+    ```
+
+    WebView должен перехватить этот редирект в `shouldOverrideUrlLoading`:
+    - Проверить, что URL начинается с `http://localhost/registration/callback`
+    - Закрыть WebView (вызвать `finish()` на Activity)
+    - Пользователь возвращается на экран логина и может войти
+
+    ⚠️ `redirect_uri=http://localhost/registration/callback` — это **не реальный сервер**. Это фиктивный адрес для редиректа. WebView его перехватывает и просто закрывается. Keycloak всё равно отправит туда код, но Android его не обрабатывает — пользователь просто возвращается на логин.
+
+    ## Что лежит в JWT (access_token)
+    Декодируйте payload (вторая часть JWT через `.`) — там есть все нужные поля:
+    ```json
+    {
+      "sub": "550e8400-e29b-41d4-a716-446655440000",  // UUID пользователя
+      "email": "user@example.com",
+      "preferred_username": "user@example.com",
+      "realm_roles": ["student"],                      // или ["tutor"]
+      "realm_access": { "roles": ["student"] },
+      "client_id": "tutorapp-client"
+    }
+    ```
+
+    ## Полный алгоритм для Android
+    1. **Логин** — POST на `/token` с `grant_type=password`, получить `access_token` и `refresh_token`
+    2. **Парсинг JWT** — извлечь `sub` (userId) и `realm_roles` (роль)
+    3. **Регистрация** — открыть WebView с правильным URL (см. выше)
+    4. **Logout** — POST на `/logout` с `refresh_token`
+    5. **Refresh** — POST на `/token` с `grant_type=refresh_token` и старым `refresh_token` в теле
+
+    ---
+    Ниже — OpenAPI-спецификация всех эндпоинтов.
 
   contact:
     name: "TutorApp Team"
 
 servers:
-  - url: "http://keycloak:8080/auth"
-    description: "Внутренняя Docker-сеть (прямой доступ к Keycloak)"
+  - url: "http://{SERVER_IP}/auth"
+    description: "Продакшн-сервер (через Nginx)"
   - url: "http://localhost:80/auth"
-    description: "Через Nginx Gateway"
+    description: "Локальный запуск (через Nginx)"
 
 paths:
   # ────────────────────────────────────────────────────────────────
-  # OIDC — Token
+  # OIDC — Token (используется ДЛЯ ЛОГИНА и ДЛЯ REFRESH)
   # ────────────────────────────────────────────────────────────────
   /realms/tutorapp/protocol/openid-connect/token:
     post:
       operationId: "getToken"
-      summary: "Получить JWT-токен (Resource Owner Password Grant)"
+      summary: "Логин ИЛИ Refresh токена (всё в один endpoint)"
       description: |
-        Аутентификация по логину/паролю.
+        ## Этот endpoint делает ДВЕ вещи:
+
+        ### 1. Логин по паролю
+        Используйте `grant_type=password`.
         Возвращает `access_token`, `refresh_token`, `id_token`.
+
+        ### 2. Обновление токена (refresh)
+        Используйте `grant_type=refresh_token` и передайте `refresh_token`.
+        Возвращает новую пару access + refresh токенов.
+
+        🟢 **Успех (200)**: токены в JSON
+        🔴 **Ошибка (400)**: неверный пароль или просроченный refresh_token
       tags: ["Authentication"]
       requestBody:
         required: true
@@ -39,30 +110,33 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required: [client_id, username, password, grant_type]
+              required: [client_id, grant_type]
               properties:
                 client_id:
                   type: string
                   default: "tutorapp-client"
-                  description: "ID клиента Keycloak"
+                  description: "ID клиента. Всегда tutorapp-client."
+                grant_type:
+                  type: string
+                  description: "password — для логина, refresh_token — для обновления"
+                  enum: ["password", "refresh_token"]
                 username:
                   type: string
-                  description: "Имя пользователя (email)"
+                  description: "Email пользователя (только для grant_type=password)"
                 password:
                   type: string
                   format: password
-                  description: "Пароль"
-                grant_type:
+                  description: "Пароль (только для grant_type=password)"
+                refresh_token:
                   type: string
-                  default: "password"
-                  enum: ["password"]
+                  description: "Refresh token (только для grant_type=refresh_token)"
                 scope:
                   type: string
                   default: "openid profile email"
-                  description: "Запрашиваемые scope'ы"
+                  description: "Всегда openid profile email"
       responses:
         "200":
-          description: "Успешная аутентификация"
+          description: "Успех — токены получены"
           content:
             application/json:
               schema:
@@ -70,15 +144,16 @@ paths:
                 properties:
                   access_token:
                     type: string
-                    description: "JWT access token"
+                    description: "JWT access token (декодировать локально для роли и userId)"
                   expires_in:
                     type: integer
-                    description: "Время жизни токена в секундах"
+                    description: "Время жизни access_token в секундах"
                   refresh_expires_in:
                     type: integer
+                    description: "Время жизни refresh_token в секундах"
                   refresh_token:
                     type: string
-                    description: "JWT refresh token"
+                    description: "JWT refresh token (сохранить для logout и refresh)"
                   token_type:
                     type: string
                     default: "Bearer"
@@ -92,7 +167,7 @@ paths:
                   scope:
                     type: string
         "400":
-          description: "Неверные учётные данные"
+          description: "Ошибка — неверные данные"
           content:
             application/json:
               schema:
@@ -111,10 +186,12 @@ paths:
   /realms/tutorapp/protocol/openid-connect/logout:
     post:
       operationId: "logout"
-      summary: "Инвалидировать refresh token"
+      summary: "Выйти из системы (инвалидировать refresh_token)"
       description: |
-        Завершает сессию пользователя.
-        Требуется валидный refresh_token.
+        Завершает сессию. После этого старый refresh_token перестаёт работать.
+
+        🟢 **Успех (204)**: без тела ответа
+        🔴 Ошибок нет — даже с невалидным token вернёт 204
       tags: ["Authentication"]
       requestBody:
         required: true
@@ -127,24 +204,121 @@ paths:
                 client_id:
                   type: string
                   default: "tutorapp-client"
+                  description: "ID клиента. Всегда tutorapp-client."
                 refresh_token:
                   type: string
-                  description: "Refresh token из ответа на login"
+                  description: "Refresh token, полученный при логине"
       responses:
         "204":
-          description: "Успешный logout (без тела)"
+          description: "Успешный logout (тело ответа пустое)"
 
   # ────────────────────────────────────────────────────────────────
-  # OIDC — Userinfo
+  # OIDC — Auth (Registration via WebView)
+  # ────────────────────────────────────────────────────────────────
+  /realms/tutorapp/protocol/openid-connect/auth:
+    get:
+      operationId: "openRegistrationPage"
+      summary: "Открыть страницу регистрации в WebView"
+      description: |
+        # ⚠️ ВАЖНО — ЭТО ДЛЯ WEBVIEW, НЕ ДЛЯ API
+
+        Этот endpoint рендерит HTML-форму регистрации.
+        Используйте его в WebView на Android, НЕ через HTTP-клиент.
+
+        ## Как формировать URL (скопируй этот код):
+        ```
+        private fun buildRegistrationUrl(): String {
+            return "http://{SERVER_IP}/auth/realms/tutorapp/protocol/openid-connect/auth?" +
+                "client_id=tutorapp-client" +
+                "&response_type=code" +
+                "&scope=openid" +
+                "&redirect_uri=http://localhost/registration/callback" +
+                "&kc_action=register"
+        }
+        ```
+
+        ## Как перехватить завершение регистрации в WebView:
+        ```kotlin
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                val url = request?.url?.toString() ?: return false
+                if (url.startsWith("http://localhost/registration/callback")) {
+                    // Регистрация завершена — закрываем WebView
+                    finish()
+                    return true
+                }
+                return false
+            }
+        }
+        ```
+
+        ## Что делает Keycloak:
+        1. Показывает форму регистрации
+        2. Пользователь заполняет email, пароль и нажимает Register
+        3. Keycloak создаёт пользователя
+        4. Редиректит на `http://localhost/registration/callback?code=...`
+        5. WebView перехватывает редирект и закрывается
+
+        🟢 **Успех**: редирект на redirect_uri — WebView должен его перехватить
+      tags: ["Registration"]
+      parameters:
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "tutorapp-client"
+          description: "Всегда tutorapp-client"
+        - name: response_type
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "code"
+          description: "Всегда code"
+        - name: scope
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "openid"
+          description: "Всегда openid"
+        - name: redirect_uri
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "http://localhost/registration/callback"
+          description: |
+            Куда Keycloak редиректит после регистрации.
+            Это НЕ реальный сервер — фиктивный URL для перехвата WebView.
+        - name: kc_action
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "register"
+          description: "Всегда register (говорит Keycloak показать форму регистрации)"
+      responses:
+        "302":
+          description: "Редирект после регистрации — перехватить в WebView"
+        "200":
+          description: "HTML-страница регистрации (отображается в WebView)"
+
+  # ────────────────────────────────────────────────────────────────
+  # OIDC — Userinfo (альтернатива декодированию JWT)
   # ────────────────────────────────────────────────────────────────
   /realms/tutorapp/protocol/openid-connect/userinfo:
     get:
       operationId: "userInfo"
-      summary: "Получить данные текущего пользователя"
+      summary: "Получить данные пользователя (необязательно)"
       description: |
-        Возвращает информацию о пользователе по access_token.
-        **Внимание:** для public-клиента может возвращать 403.
-        Рекомендуется декодировать JWT локально.
+        Возвращает email, роли и UUID пользователя.
+        Но для public-клиента (`tutorapp-client`) может вернуть 403.
+        **Рекомендуется:** декодировать JWT локально вместо этого запроса.
+
+        🟢 **200**: данные пользователя
+        🔴 **403**: public-клиенту запрещено (тогда декодируйте JWT)
       tags: ["Authentication"]
       security:
         - BearerAuth: []
@@ -159,7 +333,7 @@ paths:
                   sub:
                     type: string
                     format: uuid
-                    description: "UUID пользователя (Keycloak ID)"
+                    description: "UUID пользователя (userId для API)"
                   email:
                     type: string
                     format: email
@@ -176,15 +350,14 @@ paths:
           description: "Доступ запрещён для public-клиента"
 
   # ────────────────────────────────────────────────────────────────
-  # OIDC — JWKS / Certs
+  # OIDC — JWKS / Certs (для проверки подписи JWT на сервере)
   # ────────────────────────────────────────────────────────────────
   /realms/tutorapp/protocol/openid-connect/certs:
     get:
       operationId: "getCerts"
-      summary: "Получить публичные JWKS-ключи"
+      summary: "Публичные ключи для проверки JWT"
       description: |
-        Публичные ключи для валидации подписи JWT.
-        Используется FastAPI и Nginx (auth_request).
+        Android не нужен — используется сервером.
       tags: ["Authentication"]
       responses:
         "200":
@@ -198,30 +371,15 @@ paths:
                     type: array
                     items:
                       type: object
-                      properties:
-                        kty:
-                          type: string
-                        alg:
-                          type: string
-                        kid:
-                          type: string
-                        n:
-                          type: string
-                        e:
-                          type: string
-                        use:
-                          type: string
 
   # ────────────────────────────────────────────────────────────────
-  # Admin API — Create User
+  # Admin API — Create User (только для тестов)
   # ────────────────────────────────────────────────────────────────
   /admin/realms/tutorapp/users:
     post:
       operationId: "adminCreateUser"
-      summary: "Создать пользователя (Admin API)"
-      description: |
-        Создаёт пользователя в Keycloak через Admin API.
-        Требуется admin-токен.
+      summary: "[СЕРВЕР] Создать пользователя (Admin API)"
+      description: Android не использует — только серверные тесты.
       tags: ["Admin"]
       security:
         - BearerAuth: []
@@ -262,121 +420,7 @@ paths:
             Location:
               schema:
                 type: string
-              description: "URL созданного пользователя"
-        "409":
-          description: "Пользователь уже существует"
-
-  # ────────────────────────────────────────────────────────────────
-  # Admin API — Get User
-  # ────────────────────────────────────────────────────────────────
-  /admin/realms/tutorapp/users/{user_id}:
-    get:
-      operationId: "adminGetUser"
-      summary: "Получить пользователя по ID (Admin API)"
-      tags: ["Admin"]
-      security:
-        - BearerAuth: []
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "200":
-          description: "Данные пользователя"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  username:
-                    type: string
-                  email:
-                    type: string
-                  enabled:
-                    type: boolean
-                  realmRoles:
-                    type: array
-                    items:
-                      type: string
-
-  # ────────────────────────────────────────────────────────────────
-  # Admin API — Assign Realm Role
-  # ────────────────────────────────────────────────────────────────
-  /admin/realms/tutorapp/users/{user_id}/role-mappings/realm:
-    post:
-      operationId: "adminAssignRole"
-      summary: "Назначить роль пользователю (Admin API)"
-      tags: ["Admin"]
-      security:
-        - BearerAuth: []
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                required: [id, name]
-                properties:
-                  id:
-                    type: string
-                    description: "ID роли (получить через GET /roles/{role_name})"
-                  name:
-                    type: string
-                    enum: ["tutor", "student"]
-      responses:
-        "204":
-          description: "Роль назначена"
-
-  # ────────────────────────────────────────────────────────────────
-  # Admin API — Get Role
-  # ────────────────────────────────────────────────────────────────
-  /admin/realms/tutorapp/roles/{role_name}:
-    get:
-      operationId: "adminGetRole"
-      summary: "Получить информацию о роли (Admin API)"
-      tags: ["Admin"]
-      security:
-        - BearerAuth: []
-      parameters:
-        - name: role_name
-          in: path
-          required: true
-          schema:
-            type: string
-            enum: ["tutor", "student"]
-      responses:
-        "200":
-          description: "Информация о роли"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  name:
-                    type: string
-                  composite:
-                    type: boolean
-                  clientRole:
-                    type: boolean
-                  containerId:
-                    type: string
+              description: "URL созданного пользователя (id в конце)"
 
 components:
   securitySchemes:
@@ -387,6 +431,8 @@ components:
 
 tags:
   - name: "Authentication"
-    description: "Стандартные OIDC-эндпоинты"
+    description: "Логин, logout, refresh — то что нужно Android"
+  - name: "Registration"
+    description: "Регистрация через WebView — только для Android"
   - name: "Admin"
-    description: "Keycloak Admin API"
+    description: "Админские endpoint'ы — Android не использует"

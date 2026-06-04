@@ -3,6 +3,7 @@
   "realm": "tutorapp",
   "enabled": true,
   "loginWithEmailAllowed": false,
+  "registrationAllowed": true,
   "registrationEmailAsUsername": false,
   "verifyEmail": false,
   "editUsernameAllowed": true,
@@ -11,6 +12,7 @@
     "emailAsUsername": "false",
     "verifyEmail": "false",
     "loginWithEmailAllowed": "false",
+    "registrationAllowed": "true",
     "registrationEmailAsUsername": "false"
   },
   "requiredActions": [],
