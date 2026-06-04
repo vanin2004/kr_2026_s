@@ -1,28 +1,36 @@
-import asyncpg
+"""Database session management with SQLAlchemy 2.0 async support."""
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
 from core.config import settings
 
 
-class DatabasePool:
-    def __init__(self):
-        self.pool = None
+# Convert postgres:// to postgresql+asyncpg://
+def _make_async_url(url: str) -> str:
+    url = url.replace("postgres://", "postgresql+asyncpg://", 1)
+    url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    return url
 
-    async def connect(self):
-        self.pool = await asyncpg.create_pool(settings.DATABASE_URL)
 
-    async def disconnect(self):
-        if self.pool:
-            await self.pool.close()
+async_engine = create_async_engine(
+    _make_async_url(settings.DATABASE_URL),
+    echo=False,
+    pool_size=10,
+    max_overflow=20,
+)
 
-    async def fetch(self, query, *args):
-        async with self.pool.acquire() as connection:
-            return await connection.fetch(query, *args)
+AsyncSessionLocal = async_sessionmaker(
+    bind=async_engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
 
-    async def fetchrow(self, query, *args):
-        async with self.pool.acquire() as connection:
-            return await connection.fetchrow(query, *args)
 
-    async def execute(self, query, *args):
-        async with self.pool.acquire() as connection:
-            return await connection.execute(query, *args)
-
-db_pool = DatabasePool()
+async def get_db() -> AsyncSession:
+    """FastAPI dependency yielding an async database session."""
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise

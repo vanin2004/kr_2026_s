@@ -1,0 +1,392 @@
+openapi: "3.1.0"
+info:
+  title: "TutorApp — Keycloak IAM Service"
+  version: "1.0.0"
+  description: |
+    Сервис аутентификации и авторизации на базе Keycloak.
+
+    Realm: `tutorapp`
+    Клиент: `tutorapp-client` (public)
+    Роли: `tutor`, `student`
+
+    Через Nginx проксируется по префиксу `/auth/`.
+    Например: `POST /auth/realms/tutorapp/protocol/openid-connect/token`
+
+  contact:
+    name: "TutorApp Team"
+
+servers:
+  - url: "http://keycloak:8080/auth"
+    description: "Внутренняя Docker-сеть (прямой доступ к Keycloak)"
+  - url: "http://localhost:80/auth"
+    description: "Через Nginx Gateway"
+
+paths:
+  # ────────────────────────────────────────────────────────────────
+  # OIDC — Token
+  # ────────────────────────────────────────────────────────────────
+  /realms/tutorapp/protocol/openid-connect/token:
+    post:
+      operationId: "getToken"
+      summary: "Получить JWT-токен (Resource Owner Password Grant)"
+      description: |
+        Аутентификация по логину/паролю.
+        Возвращает `access_token`, `refresh_token`, `id_token`.
+      tags: ["Authentication"]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [client_id, username, password, grant_type]
+              properties:
+                client_id:
+                  type: string
+                  default: "tutorapp-client"
+                  description: "ID клиента Keycloak"
+                username:
+                  type: string
+                  description: "Имя пользователя (email)"
+                password:
+                  type: string
+                  format: password
+                  description: "Пароль"
+                grant_type:
+                  type: string
+                  default: "password"
+                  enum: ["password"]
+                scope:
+                  type: string
+                  default: "openid profile email"
+                  description: "Запрашиваемые scope'ы"
+      responses:
+        "200":
+          description: "Успешная аутентификация"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: "JWT access token"
+                  expires_in:
+                    type: integer
+                    description: "Время жизни токена в секундах"
+                  refresh_expires_in:
+                    type: integer
+                  refresh_token:
+                    type: string
+                    description: "JWT refresh token"
+                  token_type:
+                    type: string
+                    default: "Bearer"
+                  id_token:
+                    type: string
+                    description: "OpenID Connect ID token"
+                  not-before-policy:
+                    type: integer
+                  session_state:
+                    type: string
+                  scope:
+                    type: string
+        "400":
+          description: "Неверные учётные данные"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "invalid_grant"
+                  error_description:
+                    type: string
+                    example: "Invalid user credentials"
+
+  # ────────────────────────────────────────────────────────────────
+  # OIDC — Logout
+  # ────────────────────────────────────────────────────────────────
+  /realms/tutorapp/protocol/openid-connect/logout:
+    post:
+      operationId: "logout"
+      summary: "Инвалидировать refresh token"
+      description: |
+        Завершает сессию пользователя.
+        Требуется валидный refresh_token.
+      tags: ["Authentication"]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [client_id, refresh_token]
+              properties:
+                client_id:
+                  type: string
+                  default: "tutorapp-client"
+                refresh_token:
+                  type: string
+                  description: "Refresh token из ответа на login"
+      responses:
+        "204":
+          description: "Успешный logout (без тела)"
+
+  # ────────────────────────────────────────────────────────────────
+  # OIDC — Userinfo
+  # ────────────────────────────────────────────────────────────────
+  /realms/tutorapp/protocol/openid-connect/userinfo:
+    get:
+      operationId: "userInfo"
+      summary: "Получить данные текущего пользователя"
+      description: |
+        Возвращает информацию о пользователе по access_token.
+        **Внимание:** для public-клиента может возвращать 403.
+        Рекомендуется декодировать JWT локально.
+      tags: ["Authentication"]
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: "Данные пользователя"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sub:
+                    type: string
+                    format: uuid
+                    description: "UUID пользователя (Keycloak ID)"
+                  email:
+                    type: string
+                    format: email
+                  email_verified:
+                    type: boolean
+                  preferred_username:
+                    type: string
+                  realm_roles:
+                    type: array
+                    items:
+                      type: string
+                    example: ["student"]
+        "403":
+          description: "Доступ запрещён для public-клиента"
+
+  # ────────────────────────────────────────────────────────────────
+  # OIDC — JWKS / Certs
+  # ────────────────────────────────────────────────────────────────
+  /realms/tutorapp/protocol/openid-connect/certs:
+    get:
+      operationId: "getCerts"
+      summary: "Получить публичные JWKS-ключи"
+      description: |
+        Публичные ключи для валидации подписи JWT.
+        Используется FastAPI и Nginx (auth_request).
+      tags: ["Authentication"]
+      responses:
+        "200":
+          description: "JWKS Set"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        kty:
+                          type: string
+                        alg:
+                          type: string
+                        kid:
+                          type: string
+                        n:
+                          type: string
+                        e:
+                          type: string
+                        use:
+                          type: string
+
+  # ────────────────────────────────────────────────────────────────
+  # Admin API — Create User
+  # ────────────────────────────────────────────────────────────────
+  /admin/realms/tutorapp/users:
+    post:
+      operationId: "adminCreateUser"
+      summary: "Создать пользователя (Admin API)"
+      description: |
+        Создаёт пользователя в Keycloak через Admin API.
+        Требуется admin-токен.
+      tags: ["Admin"]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, email, enabled]
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                enabled:
+                  type: boolean
+                  default: true
+                credentials:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        default: "password"
+                      value:
+                        type: string
+                        format: password
+                      temporary:
+                        type: boolean
+                        default: false
+      responses:
+        "201":
+          description: "Пользователь создан"
+          headers:
+            Location:
+              schema:
+                type: string
+              description: "URL созданного пользователя"
+        "409":
+          description: "Пользователь уже существует"
+
+  # ────────────────────────────────────────────────────────────────
+  # Admin API — Get User
+  # ────────────────────────────────────────────────────────────────
+  /admin/realms/tutorapp/users/{user_id}:
+    get:
+      operationId: "adminGetUser"
+      summary: "Получить пользователя по ID (Admin API)"
+      tags: ["Admin"]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Данные пользователя"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  enabled:
+                    type: boolean
+                  realmRoles:
+                    type: array
+                    items:
+                      type: string
+
+  # ────────────────────────────────────────────────────────────────
+  # Admin API — Assign Realm Role
+  # ────────────────────────────────────────────────────────────────
+  /admin/realms/tutorapp/users/{user_id}/role-mappings/realm:
+    post:
+      operationId: "adminAssignRole"
+      summary: "Назначить роль пользователю (Admin API)"
+      tags: ["Admin"]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required: [id, name]
+                properties:
+                  id:
+                    type: string
+                    description: "ID роли (получить через GET /roles/{role_name})"
+                  name:
+                    type: string
+                    enum: ["tutor", "student"]
+      responses:
+        "204":
+          description: "Роль назначена"
+
+  # ────────────────────────────────────────────────────────────────
+  # Admin API — Get Role
+  # ────────────────────────────────────────────────────────────────
+  /admin/realms/tutorapp/roles/{role_name}:
+    get:
+      operationId: "adminGetRole"
+      summary: "Получить информацию о роли (Admin API)"
+      tags: ["Admin"]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: role_name
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: ["tutor", "student"]
+      responses:
+        "200":
+          description: "Информация о роли"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  composite:
+                    type: boolean
+                  clientRole:
+                    type: boolean
+                  containerId:
+                    type: string
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+tags:
+  - name: "Authentication"
+    description: "Стандартные OIDC-эндпоинты"
+  - name: "Admin"
+    description: "Keycloak Admin API"

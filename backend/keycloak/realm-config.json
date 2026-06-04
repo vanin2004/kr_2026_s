@@ -1,0 +1,44 @@
+{
+  "id": "tutorapp",
+  "realm": "tutorapp",
+  "enabled": true,
+  "loginWithEmailAllowed": false,
+  "registrationEmailAsUsername": false,
+  "verifyEmail": false,
+  "editUsernameAllowed": true,
+  "attributes": {
+    "bruteForceProtected": "false",
+    "emailAsUsername": "false",
+    "verifyEmail": "false",
+    "loginWithEmailAllowed": "false",
+    "registrationEmailAsUsername": "false"
+  },
+  "requiredActions": [],
+  "roles": {
+    "realm": [
+      {
+        "name": "tutor",
+        "description": "Tutor Role"
+      },
+      {
+        "name": "student",
+        "description": "Student Role"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "tutorapp-client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    }
+  ],
+  "users": [],
+  "eventsEnabled": true,
+  "eventsListeners": ["webhook-http"]
+}

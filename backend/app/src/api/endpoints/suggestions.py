@@ -1,6 +1,7 @@
-from typing import List
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import APIRouter, HTTPException
+from db.session import get_db
 from schemas.suggestions import SuggestionRequest, SuggestionResponse
 from services.recommendation import RecommendationService
 
@@ -8,10 +9,17 @@ from services.recommendation import RecommendationService
 
 router = APIRouter()
 
-@router.post("/suggestions", response_model=List[SuggestionResponse])
-async def get_suggestions(request: SuggestionRequest):
+
+@router.post("/suggestions", response_model=list[SuggestionResponse])
+async def get_suggestions(
+    request: SuggestionRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    """Get tutor recommendations based on hard filters and soft scoring."""
     try:
-        suggestions = await RecommendationService.get_suggestions(request)
+        suggestions = await RecommendationService.get_suggestions(
+            request, session=db
+        )
         return suggestions
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
