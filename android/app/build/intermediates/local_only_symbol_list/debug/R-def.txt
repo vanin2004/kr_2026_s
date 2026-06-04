@@ -73,6 +73,8 @@ id option_1
 id option_2
 id option_3
 id option_4
+id registration_progress
+id registration_webview
 id requests_list
 id requests_progress
 id schedule_add
@@ -159,6 +161,7 @@ id weight_tags_value
 layout activity_chat
 layout activity_lesson_detail
 layout activity_login
+layout activity_registration
 layout activity_splash
 layout activity_student_main
 layout activity_test

@@ -1,8 +1,8 @@
 package com.tutorplatform.app
 
 object AppConfig {
-    const val API_BASE_URL = "http://192.168.1.167:80/"
-    const val KEYCLOAK_BASE_URL = "http://192.168.1.167:80/auth/"
+    const val API_BASE_URL = "http://192.168.1.167/"
+    const val KEYCLOAK_BASE_URL = "http://192.168.1.167/auth/"
     const val KEYCLOAK_REALM = "tutor-platform"
     const val KEYCLOAK_CLIENT_ID = "tutor-frontend"
 }

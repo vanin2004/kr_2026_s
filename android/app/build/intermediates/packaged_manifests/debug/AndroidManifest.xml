@@ -41,6 +41,9 @@
             android:name="com.tutorplatform.app.ui.LoginActivity"
             android:exported="false" />
         <activity
+            android:name="com.tutorplatform.app.ui.RegistrationActivity"
+            android:exported="false" />
+        <activity
             android:name="com.tutorplatform.app.ui.StudentMainActivity"
             android:exported="false" />
         <activity
