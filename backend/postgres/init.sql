@@ -135,16 +135,47 @@ CREATE TABLE IF NOT EXISTS api.health_check (
 );
 
 -- Privileges
+-- Create postgres role if it doesn't exist (for compatibility)
+DO $$
+BEGIN
+  CREATE ROLE postgres;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
+
 GRANT USAGE ON SCHEMA api TO postgres;
 GRANT ALL PRIVILEGES ON ALL ENUMS IN SCHEMA api TO postgres;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA api TO postgres;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA api TO postgres;
 
 -- Create basic roles for Row-Level Security
-CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'tutordb_pass';
-CREATE ROLE web_student NOINHERIT;
-CREATE ROLE web_tutor NOINHERIT;
-CREATE ROLE anon NOINHERIT;
+DO $$
+BEGIN
+  CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'tutordb_pass';
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
+
+DO $$
+BEGIN
+  CREATE ROLE web_student NOINHERIT;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
+
+DO $$
+BEGIN
+  CREATE ROLE web_tutor NOINHERIT;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
+
+DO $$
+BEGIN
+  CREATE ROLE anon NOINHERIT;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
 -- Grant schema access
 GRANT USAGE ON SCHEMA api TO authenticator, web_student, web_tutor, anon;
