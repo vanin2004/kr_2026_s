@@ -1,2 +1,61 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
 
+# --- Virtual environments ---
 .venv/
+venv/
+env/
+
+# --- Testing ---
+.pytest_cache/
+*.pytest_cache*
+.cache/
+htmlcov/
+.coverage
+
+# --- Android ---
+android/.gradle/
+android/app/build/
+android/local.properties
+*.apk
+*.aab
+*.dex
+*.class
+*.log
+*.iml
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+*.hprof
+
+# --- IDE ---
+.idea/
+.vscode/
+
+# --- Environment ---
+.env
+.env.local
+.env.*.local
+
+# --- Docker ---
+*.pid
+*.seed
+*.pid.lock
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# --- Logs ---
+*.log
