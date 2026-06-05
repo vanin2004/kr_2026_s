@@ -4,16 +4,16 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -24,25 +24,46 @@ public final class ActivityTutorDetailBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final Button tutorDetailApply;
+  public final MaterialButton tutorDetailApply;
 
   @NonNull
-  public final Button tutorDetailBook;
+  public final MaterialButton tutorDetailBook;
 
   @NonNull
-  public final EditText tutorDetailDate;
+  public final MaterialButton tutorDetailDateBtn;
 
   @NonNull
-  public final EditText tutorDetailEnd;
+  public final MaterialTextView tutorDetailEducation;
 
   @NonNull
-  public final TextView tutorDetailName;
+  public final MaterialButton tutorDetailEndBtn;
+
+  @NonNull
+  public final LinearLayout tutorDetailMetricsRow;
+
+  @NonNull
+  public final MaterialTextView tutorDetailName;
+
+  @NonNull
+  public final MaterialTextView tutorDetailNewBadge;
 
   @NonNull
   public final ProgressBar tutorDetailProgress;
 
   @NonNull
-  public final TextView tutorDetailRating;
+  public final MaterialTextView tutorDetailRating;
+
+  @NonNull
+  public final MaterialTextView tutorDetailRatingComm;
+
+  @NonNull
+  public final MaterialTextView tutorDetailRatingEff;
+
+  @NonNull
+  public final MaterialTextView tutorDetailRatingExp;
+
+  @NonNull
+  public final MaterialTextView tutorDetailRatingResp;
 
   @NonNull
   public final RecyclerView tutorDetailReviewsList;
@@ -51,34 +72,55 @@ public final class ActivityTutorDetailBinding implements ViewBinding {
   public final RecyclerView tutorDetailScheduleList;
 
   @NonNull
-  public final EditText tutorDetailStart;
+  public final MaterialButton tutorDetailStartBtn;
 
   @NonNull
-  public final TextView tutorDetailSubtitle;
+  public final MaterialTextView tutorDetailStudents;
 
   @NonNull
-  public final TextView tutorDetailTags;
+  public final MaterialTextView tutorDetailSubtitle;
 
-  private ActivityTutorDetailBinding(@NonNull ScrollView rootView, @NonNull Button tutorDetailApply,
-      @NonNull Button tutorDetailBook, @NonNull EditText tutorDetailDate,
-      @NonNull EditText tutorDetailEnd, @NonNull TextView tutorDetailName,
-      @NonNull ProgressBar tutorDetailProgress, @NonNull TextView tutorDetailRating,
-      @NonNull RecyclerView tutorDetailReviewsList, @NonNull RecyclerView tutorDetailScheduleList,
-      @NonNull EditText tutorDetailStart, @NonNull TextView tutorDetailSubtitle,
-      @NonNull TextView tutorDetailTags) {
+  @NonNull
+  public final MaterialTextView tutorDetailTags;
+
+  @NonNull
+  public final MaterialTextView tutorDetailVerified;
+
+  private ActivityTutorDetailBinding(@NonNull ScrollView rootView,
+      @NonNull MaterialButton tutorDetailApply, @NonNull MaterialButton tutorDetailBook,
+      @NonNull MaterialButton tutorDetailDateBtn, @NonNull MaterialTextView tutorDetailEducation,
+      @NonNull MaterialButton tutorDetailEndBtn, @NonNull LinearLayout tutorDetailMetricsRow,
+      @NonNull MaterialTextView tutorDetailName, @NonNull MaterialTextView tutorDetailNewBadge,
+      @NonNull ProgressBar tutorDetailProgress, @NonNull MaterialTextView tutorDetailRating,
+      @NonNull MaterialTextView tutorDetailRatingComm,
+      @NonNull MaterialTextView tutorDetailRatingEff,
+      @NonNull MaterialTextView tutorDetailRatingExp,
+      @NonNull MaterialTextView tutorDetailRatingResp, @NonNull RecyclerView tutorDetailReviewsList,
+      @NonNull RecyclerView tutorDetailScheduleList, @NonNull MaterialButton tutorDetailStartBtn,
+      @NonNull MaterialTextView tutorDetailStudents, @NonNull MaterialTextView tutorDetailSubtitle,
+      @NonNull MaterialTextView tutorDetailTags, @NonNull MaterialTextView tutorDetailVerified) {
     this.rootView = rootView;
     this.tutorDetailApply = tutorDetailApply;
     this.tutorDetailBook = tutorDetailBook;
-    this.tutorDetailDate = tutorDetailDate;
-    this.tutorDetailEnd = tutorDetailEnd;
+    this.tutorDetailDateBtn = tutorDetailDateBtn;
+    this.tutorDetailEducation = tutorDetailEducation;
+    this.tutorDetailEndBtn = tutorDetailEndBtn;
+    this.tutorDetailMetricsRow = tutorDetailMetricsRow;
     this.tutorDetailName = tutorDetailName;
+    this.tutorDetailNewBadge = tutorDetailNewBadge;
     this.tutorDetailProgress = tutorDetailProgress;
     this.tutorDetailRating = tutorDetailRating;
+    this.tutorDetailRatingComm = tutorDetailRatingComm;
+    this.tutorDetailRatingEff = tutorDetailRatingEff;
+    this.tutorDetailRatingExp = tutorDetailRatingExp;
+    this.tutorDetailRatingResp = tutorDetailRatingResp;
     this.tutorDetailReviewsList = tutorDetailReviewsList;
     this.tutorDetailScheduleList = tutorDetailScheduleList;
-    this.tutorDetailStart = tutorDetailStart;
+    this.tutorDetailStartBtn = tutorDetailStartBtn;
+    this.tutorDetailStudents = tutorDetailStudents;
     this.tutorDetailSubtitle = tutorDetailSubtitle;
     this.tutorDetailTags = tutorDetailTags;
+    this.tutorDetailVerified = tutorDetailVerified;
   }
 
   @Override
@@ -109,32 +151,50 @@ public final class ActivityTutorDetailBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.tutor_detail_apply;
-      Button tutorDetailApply = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton tutorDetailApply = ViewBindings.findChildViewById(rootView, id);
       if (tutorDetailApply == null) {
         break missingId;
       }
 
       id = R.id.tutor_detail_book;
-      Button tutorDetailBook = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton tutorDetailBook = ViewBindings.findChildViewById(rootView, id);
       if (tutorDetailBook == null) {
         break missingId;
       }
 
-      id = R.id.tutor_detail_date;
-      EditText tutorDetailDate = ViewBindings.findChildViewById(rootView, id);
-      if (tutorDetailDate == null) {
+      id = R.id.tutor_detail_date_btn;
+      MaterialButton tutorDetailDateBtn = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailDateBtn == null) {
         break missingId;
       }
 
-      id = R.id.tutor_detail_end;
-      EditText tutorDetailEnd = ViewBindings.findChildViewById(rootView, id);
-      if (tutorDetailEnd == null) {
+      id = R.id.tutor_detail_education;
+      MaterialTextView tutorDetailEducation = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailEducation == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_end_btn;
+      MaterialButton tutorDetailEndBtn = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailEndBtn == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_metrics_row;
+      LinearLayout tutorDetailMetricsRow = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailMetricsRow == null) {
         break missingId;
       }
 
       id = R.id.tutor_detail_name;
-      TextView tutorDetailName = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDetailName = ViewBindings.findChildViewById(rootView, id);
       if (tutorDetailName == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_new_badge;
+      MaterialTextView tutorDetailNewBadge = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailNewBadge == null) {
         break missingId;
       }
 
@@ -145,8 +205,32 @@ public final class ActivityTutorDetailBinding implements ViewBinding {
       }
 
       id = R.id.tutor_detail_rating;
-      TextView tutorDetailRating = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDetailRating = ViewBindings.findChildViewById(rootView, id);
       if (tutorDetailRating == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_rating_comm;
+      MaterialTextView tutorDetailRatingComm = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailRatingComm == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_rating_eff;
+      MaterialTextView tutorDetailRatingEff = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailRatingEff == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_rating_exp;
+      MaterialTextView tutorDetailRatingExp = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailRatingExp == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_rating_resp;
+      MaterialTextView tutorDetailRatingResp = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailRatingResp == null) {
         break missingId;
       }
 
@@ -162,28 +246,43 @@ public final class ActivityTutorDetailBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tutor_detail_start;
-      EditText tutorDetailStart = ViewBindings.findChildViewById(rootView, id);
-      if (tutorDetailStart == null) {
+      id = R.id.tutor_detail_start_btn;
+      MaterialButton tutorDetailStartBtn = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailStartBtn == null) {
+        break missingId;
+      }
+
+      id = R.id.tutor_detail_students;
+      MaterialTextView tutorDetailStudents = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailStudents == null) {
         break missingId;
       }
 
       id = R.id.tutor_detail_subtitle;
-      TextView tutorDetailSubtitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDetailSubtitle = ViewBindings.findChildViewById(rootView, id);
       if (tutorDetailSubtitle == null) {
         break missingId;
       }
 
       id = R.id.tutor_detail_tags;
-      TextView tutorDetailTags = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDetailTags = ViewBindings.findChildViewById(rootView, id);
       if (tutorDetailTags == null) {
         break missingId;
       }
 
+      id = R.id.tutor_detail_verified;
+      MaterialTextView tutorDetailVerified = ViewBindings.findChildViewById(rootView, id);
+      if (tutorDetailVerified == null) {
+        break missingId;
+      }
+
       return new ActivityTutorDetailBinding((ScrollView) rootView, tutorDetailApply,
-          tutorDetailBook, tutorDetailDate, tutorDetailEnd, tutorDetailName, tutorDetailProgress,
-          tutorDetailRating, tutorDetailReviewsList, tutorDetailScheduleList, tutorDetailStart,
-          tutorDetailSubtitle, tutorDetailTags);
+          tutorDetailBook, tutorDetailDateBtn, tutorDetailEducation, tutorDetailEndBtn,
+          tutorDetailMetricsRow, tutorDetailName, tutorDetailNewBadge, tutorDetailProgress,
+          tutorDetailRating, tutorDetailRatingComm, tutorDetailRatingEff, tutorDetailRatingExp,
+          tutorDetailRatingResp, tutorDetailReviewsList, tutorDetailScheduleList,
+          tutorDetailStartBtn, tutorDetailStudents, tutorDetailSubtitle, tutorDetailTags,
+          tutorDetailVerified);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

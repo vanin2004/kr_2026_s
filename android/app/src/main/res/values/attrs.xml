@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="chatMyBubbleColor" format="color" />
+    <attr name="chatMyBubbleTextColor" format="color" />
+    <attr name="chatOtherBubbleColor" format="color" />
+    <attr name="chatOtherBubbleTextColor" format="color" />
+</resources>

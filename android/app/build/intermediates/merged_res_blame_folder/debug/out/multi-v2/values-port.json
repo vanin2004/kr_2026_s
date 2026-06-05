@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.tutorplatform.app-mergeDebugResources-34:/values-port/values-port.xml",
+            "outputFile": "com.tutorplatform.app-mergeDebugResources-36:/values-port/values-port.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Anastasia\\.gradle\\caches\\transforms-3\\18d8a791538758ea6937f54c202ace95\\transformed\\appcompat-1.7.0\\res\\values-port\\values-port.xml",
+                    "source": "/home/mrwight/.gradle/caches/transforms-3/18d8a791538758ea6937f54c202ace95/transformed/appcompat-1.7.0/res/values-port/values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

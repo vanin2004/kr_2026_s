@@ -4,16 +4,16 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -36,28 +36,28 @@ public final class ActivityTestBinding implements ViewBinding {
   public final RadioButton option4;
 
   @NonNull
-  public final TextView testHint;
+  public final MaterialTextView testHint;
 
   @NonNull
-  public final Button testNext;
+  public final MaterialButton testNext;
 
   @NonNull
   public final RadioGroup testOptions;
 
   @NonNull
-  public final TextView testProgress;
+  public final MaterialTextView testProgress;
 
   @NonNull
-  public final TextView testQuestion;
+  public final MaterialTextView testQuestion;
 
   @NonNull
   public final ProgressBar testSubmitProgress;
 
   private ActivityTestBinding(@NonNull ScrollView rootView, @NonNull RadioButton option1,
       @NonNull RadioButton option2, @NonNull RadioButton option3, @NonNull RadioButton option4,
-      @NonNull TextView testHint, @NonNull Button testNext, @NonNull RadioGroup testOptions,
-      @NonNull TextView testProgress, @NonNull TextView testQuestion,
-      @NonNull ProgressBar testSubmitProgress) {
+      @NonNull MaterialTextView testHint, @NonNull MaterialButton testNext,
+      @NonNull RadioGroup testOptions, @NonNull MaterialTextView testProgress,
+      @NonNull MaterialTextView testQuestion, @NonNull ProgressBar testSubmitProgress) {
     this.rootView = rootView;
     this.option1 = option1;
     this.option2 = option2;
@@ -123,13 +123,13 @@ public final class ActivityTestBinding implements ViewBinding {
       }
 
       id = R.id.test_hint;
-      TextView testHint = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView testHint = ViewBindings.findChildViewById(rootView, id);
       if (testHint == null) {
         break missingId;
       }
 
       id = R.id.test_next;
-      Button testNext = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton testNext = ViewBindings.findChildViewById(rootView, id);
       if (testNext == null) {
         break missingId;
       }
@@ -141,13 +141,13 @@ public final class ActivityTestBinding implements ViewBinding {
       }
 
       id = R.id.test_progress;
-      TextView testProgress = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView testProgress = ViewBindings.findChildViewById(rootView, id);
       if (testProgress == null) {
         break missingId;
       }
 
       id = R.id.test_question;
-      TextView testQuestion = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView testQuestion = ViewBindings.findChildViewById(rootView, id);
       if (testQuestion == null) {
         break missingId;
       }

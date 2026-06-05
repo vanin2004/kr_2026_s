@@ -4,14 +4,14 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -22,34 +22,35 @@ public final class FragmentTutorProfileBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final EditText tutorProfileEducation;
+  public final TextInputEditText tutorProfileEducation;
 
   @NonNull
-  public final EditText tutorProfileExperience;
+  public final TextInputEditText tutorProfileExperience;
 
   @NonNull
-  public final Button tutorProfileLogout;
+  public final MaterialButton tutorProfileLogout;
 
   @NonNull
-  public final EditText tutorProfileName;
+  public final TextInputEditText tutorProfileName;
 
   @NonNull
   public final ProgressBar tutorProfileProgress;
 
   @NonNull
-  public final EditText tutorProfileRate;
+  public final TextInputEditText tutorProfileRate;
 
   @NonNull
-  public final Button tutorProfileSave;
+  public final MaterialButton tutorProfileSave;
 
   @NonNull
-  public final EditText tutorProfileSubject;
+  public final TextInputEditText tutorProfileSubject;
 
   private FragmentTutorProfileBinding(@NonNull ScrollView rootView,
-      @NonNull EditText tutorProfileEducation, @NonNull EditText tutorProfileExperience,
-      @NonNull Button tutorProfileLogout, @NonNull EditText tutorProfileName,
-      @NonNull ProgressBar tutorProfileProgress, @NonNull EditText tutorProfileRate,
-      @NonNull Button tutorProfileSave, @NonNull EditText tutorProfileSubject) {
+      @NonNull TextInputEditText tutorProfileEducation,
+      @NonNull TextInputEditText tutorProfileExperience, @NonNull MaterialButton tutorProfileLogout,
+      @NonNull TextInputEditText tutorProfileName, @NonNull ProgressBar tutorProfileProgress,
+      @NonNull TextInputEditText tutorProfileRate, @NonNull MaterialButton tutorProfileSave,
+      @NonNull TextInputEditText tutorProfileSubject) {
     this.rootView = rootView;
     this.tutorProfileEducation = tutorProfileEducation;
     this.tutorProfileExperience = tutorProfileExperience;
@@ -89,25 +90,25 @@ public final class FragmentTutorProfileBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.tutor_profile_education;
-      EditText tutorProfileEducation = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText tutorProfileEducation = ViewBindings.findChildViewById(rootView, id);
       if (tutorProfileEducation == null) {
         break missingId;
       }
 
       id = R.id.tutor_profile_experience;
-      EditText tutorProfileExperience = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText tutorProfileExperience = ViewBindings.findChildViewById(rootView, id);
       if (tutorProfileExperience == null) {
         break missingId;
       }
 
       id = R.id.tutor_profile_logout;
-      Button tutorProfileLogout = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton tutorProfileLogout = ViewBindings.findChildViewById(rootView, id);
       if (tutorProfileLogout == null) {
         break missingId;
       }
 
       id = R.id.tutor_profile_name;
-      EditText tutorProfileName = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText tutorProfileName = ViewBindings.findChildViewById(rootView, id);
       if (tutorProfileName == null) {
         break missingId;
       }
@@ -119,19 +120,19 @@ public final class FragmentTutorProfileBinding implements ViewBinding {
       }
 
       id = R.id.tutor_profile_rate;
-      EditText tutorProfileRate = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText tutorProfileRate = ViewBindings.findChildViewById(rootView, id);
       if (tutorProfileRate == null) {
         break missingId;
       }
 
       id = R.id.tutor_profile_save;
-      Button tutorProfileSave = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton tutorProfileSave = ViewBindings.findChildViewById(rootView, id);
       if (tutorProfileSave == null) {
         break missingId;
       }
 
       id = R.id.tutor_profile_subject;
-      EditText tutorProfileSubject = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText tutorProfileSubject = ViewBindings.findChildViewById(rootView, id);
       if (tutorProfileSubject == null) {
         break missingId;
       }

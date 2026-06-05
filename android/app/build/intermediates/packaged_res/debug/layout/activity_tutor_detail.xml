@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_light">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,59 +12,157 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_lg">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tutor_detail_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Репетитор"
-            android:textColor="@color/text_primary"
             android:textSize="22sp"
-            android:textStyle="bold"
-            android:fontFamily="serif" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tutor_detail_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Предмет • Ставка • Опыт"
-            android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:layout_marginTop="@dimen/spacing_sm" />
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_lg"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_lg">
+            android:layout_marginTop="@dimen/spacing_lg">
 
-            <TextView
-                android:id="@+id/tutor_detail_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Рейтинг: 0.0"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tutor_detail_tags"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:text="Теги: -"
-                android:textColor="@color/text_secondary" />
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
 
-        </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tutor_detail_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Рейтинг"
+                    android:textSize="16sp"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-        <TextView
+                <LinearLayout
+                    android:id="@+id/tutor_detail_metrics_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_rating_eff"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Эффективность: —"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_rating_comm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Общение: —"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_rating_exp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Экспертиза: —"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_rating_resp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Отзывчивость: —"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_education"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Образование"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_students"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Учеников: —"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_verified"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text=""
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorPrimary"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tutor_detail_new_badge"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text=""
+                            android:textSize="13sp"
+                            android:textColor="#FF9800"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tutor_detail_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text=""
+                    android:textSize="13sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_lg"
             android:text="Свободные слоты"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tutor_detail_schedule_list"
@@ -71,75 +170,72 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/tutor_detail_apply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
-            android:background="@drawable/bg_button_primary"
-            android:text="Отправить заявку"
-            android:textColor="@color/white" />
+            android:text="Отправить заявку" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_lg"
             android:text="Бронирование урока"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_sm"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_md">
+            android:layout_marginTop="@dimen/spacing_sm">
 
-            <EditText
-                android:id="@+id/tutor_detail_date"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_input"
-                android:hint="Дата (ГГГГ-ММ-ДД)"
-                android:padding="@dimen/spacing_sm" />
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
 
-            <EditText
-                android:id="@+id/tutor_detail_start"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:background="@drawable/bg_input"
-                android:hint="Начало (ЧЧ:ММ)"
-                android:padding="@dimen/spacing_sm" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/tutor_detail_date_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Выберите дату" />
 
-            <EditText
-                android:id="@+id/tutor_detail_end"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:background="@drawable/bg_input"
-                android:hint="Конец (ЧЧ:ММ)"
-                android:padding="@dimen/spacing_sm" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/tutor_detail_start_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="Время начала" />
 
-            <Button
-                android:id="@+id/tutor_detail_book"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:background="@drawable/bg_button_outline"
-                android:text="Забронировать урок"
-                android:textColor="@color/brand_primary" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/tutor_detail_end_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="Время конца" />
 
-        </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/tutor_detail_book"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="Забронировать урок" />
 
-        <TextView
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_lg"
             android:text="Отзывы"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tutor_detail_reviews_list"

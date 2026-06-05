@@ -4,15 +4,15 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -23,13 +23,13 @@ public final class ActivityLoginBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final Button loginButton;
+  public final MaterialButton loginButton;
 
   @NonNull
   public final TextInputEditText loginEmail;
 
   @NonNull
-  public final TextView loginHint;
+  public final MaterialTextView loginHint;
 
   @NonNull
   public final TextInputEditText loginPassword;
@@ -38,12 +38,12 @@ public final class ActivityLoginBinding implements ViewBinding {
   public final ProgressBar loginProgress;
 
   @NonNull
-  public final Button loginRegister;
+  public final MaterialButton loginRegister;
 
-  private ActivityLoginBinding(@NonNull ScrollView rootView, @NonNull Button loginButton,
-      @NonNull TextInputEditText loginEmail, @NonNull TextView loginHint,
+  private ActivityLoginBinding(@NonNull ScrollView rootView, @NonNull MaterialButton loginButton,
+      @NonNull TextInputEditText loginEmail, @NonNull MaterialTextView loginHint,
       @NonNull TextInputEditText loginPassword, @NonNull ProgressBar loginProgress,
-      @NonNull Button loginRegister) {
+      @NonNull MaterialButton loginRegister) {
     this.rootView = rootView;
     this.loginButton = loginButton;
     this.loginEmail = loginEmail;
@@ -81,7 +81,7 @@ public final class ActivityLoginBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.login_button;
-      Button loginButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton loginButton = ViewBindings.findChildViewById(rootView, id);
       if (loginButton == null) {
         break missingId;
       }
@@ -93,7 +93,7 @@ public final class ActivityLoginBinding implements ViewBinding {
       }
 
       id = R.id.login_hint;
-      TextView loginHint = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView loginHint = ViewBindings.findChildViewById(rootView, id);
       if (loginHint == null) {
         break missingId;
       }
@@ -111,7 +111,7 @@ public final class ActivityLoginBinding implements ViewBinding {
       }
 
       id = R.id.login_register;
-      Button loginRegister = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton loginRegister = ViewBindings.findChildViewById(rootView, id);
       if (loginRegister == null) {
         break missingId;
       }

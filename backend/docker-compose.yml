@@ -2,8 +2,6 @@ services:
   db:
     image: postgres:15
     env_file: .env
-    volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -24,14 +22,27 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+    volumes:
+      - ./app/src:/app/src:ro
     env_file: .env
+    environment:
+      # Override — inside the Docker network Keycloak is at container name
+      KEYCLOAK_URL: http://keycloak:8080/auth
     depends_on:
       db:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.0
     command: start-dev --import-realm
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}

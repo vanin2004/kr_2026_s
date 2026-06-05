@@ -12,7 +12,6 @@ import com.tutorplatform.app.SessionManager
 import com.tutorplatform.app.adapters.SimpleItemAdapter
 import com.tutorplatform.app.model.SimpleItem
 import com.tutorplatform.app.network.ApiClient
-import com.tutorplatform.app.util.ApiFilters
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -47,14 +46,21 @@ class TutorStudentsFragment : Fragment(R.layout.fragment_tutor_students) {
             try {
                 val apps = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext()).getApplications(
-                        tutorIdFilter = ApiFilters.eq(tutorId),
-                        statusFilter = ApiFilters.eq("accepted")
-                    )
+                        tutorId = tutorId
+                    ).filter { it.status == "accepted" }
                 }
                 val items = apps.map { app ->
+                    val name = try {
+                        val profile = withContext(Dispatchers.IO) {
+                            ApiClient.dataService(requireContext()).getStudentProfile(app.student_id)
+                        }
+                        profile.full_name ?: app.student_id
+                    } catch (_: Exception) {
+                        app.student_id
+                    }
                     SimpleItem(
                         id = app.id,
-                        title = "Ученик ${app.student_id.take(8)}",
+                        title = name,
                         subtitle = "Статус: ${mapStatus(app.status)}"
                     )
                 }

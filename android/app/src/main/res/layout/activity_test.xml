@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_light">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,30 +12,27 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_lg">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/test_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Вопрос 1 из 10"
-            android:textColor="@color/text_secondary" />
+            android:text="Вопрос 1 из 10" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/test_question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
             android:text="Текст вопроса"
-            android:textColor="@color/text_primary"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/test_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
             android:text="Подсказка"
-            android:textColor="@color/text_secondary"
             android:visibility="gone" />
 
         <RadioGroup
@@ -68,14 +66,12 @@
                 android:text="Вариант 4" />
         </RadioGroup>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/test_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_lg"
-            android:background="@drawable/bg_button_primary"
-            android:text="Далее"
-            android:textColor="@color/white" />
+            android:text="Далее" />
 
         <ProgressBar
             android:id="@+id/test_submit_progress"

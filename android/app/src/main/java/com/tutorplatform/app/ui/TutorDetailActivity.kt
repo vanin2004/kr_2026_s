@@ -1,10 +1,15 @@
 package com.tutorplatform.app.ui
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
+import java.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,8 +20,8 @@ import com.tutorplatform.app.model.ApplicationCreate
 import com.tutorplatform.app.model.LessonCreate
 import com.tutorplatform.app.adapters.SimpleItemAdapter
 import com.tutorplatform.app.model.SimpleItem
+import com.tutorplatform.app.model.TutorProfile
 import com.tutorplatform.app.network.ApiClient
-import com.tutorplatform.app.util.ApiFilters
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -24,8 +29,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TutorDetailActivity : AppCompatActivity() {
+    private var subjectNameMap: Map<String, String> = emptyMap()
+    private var tagNameMap: Map<String, String> = emptyMap()
+    private val dayNames = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= 35) { enableEdgeToEdge() }
         setContentView(R.layout.activity_tutor_detail)
 
         val tutorId = intent.getStringExtra(EXTRA_TUTOR_ID)
@@ -52,12 +62,89 @@ class TutorDetailActivity : AppCompatActivity() {
         reviewsList.layoutManager = LinearLayoutManager(this)
         reviewsList.adapter = reviewsAdapter
 
-        val dateInput = findViewById<EditText>(R.id.tutor_detail_date)
-        val startInput = findViewById<EditText>(R.id.tutor_detail_start)
-        val endInput = findViewById<EditText>(R.id.tutor_detail_end)
+        val dateBtn = findViewById<MaterialButton>(R.id.tutor_detail_date_btn)
+        val startBtn = findViewById<MaterialButton>(R.id.tutor_detail_start_btn)
+        val endBtn = findViewById<MaterialButton>(R.id.tutor_detail_end_btn)
         val bookButton = findViewById<Button>(R.id.tutor_detail_book)
 
-        loadTutor(tutorId, nameView, subtitleView, ratingView)
+        // views для метрик
+        val ratingEff = findViewById<TextView>(R.id.tutor_detail_rating_eff)
+        val ratingComm = findViewById<TextView>(R.id.tutor_detail_rating_comm)
+        val ratingExp = findViewById<TextView>(R.id.tutor_detail_rating_exp)
+        val ratingResp = findViewById<TextView>(R.id.tutor_detail_rating_resp)
+        val educationView = findViewById<TextView>(R.id.tutor_detail_education)
+        val studentsView = findViewById<TextView>(R.id.tutor_detail_students)
+        val verifiedView = findViewById<TextView>(R.id.tutor_detail_verified)
+        val newBadge = findViewById<TextView>(R.id.tutor_detail_new_badge)
+
+        var selectedDate: String? = null
+        var selectedStart: String? = null
+        var selectedEnd: String? = null
+
+        dateBtn.setOnClickListener {
+            val now = Calendar.getInstance()
+            DatePickerDialog(
+                this,
+                { _, year, month, dayOfMonth ->
+                    val date = "%04d-%02d-%02d".format(year, month + 1, dayOfMonth)
+                    selectedDate = date
+                    dateBtn.text = date
+                },
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+        startBtn.setOnClickListener {
+            val now = Calendar.getInstance()
+            TimePickerDialog(
+                this,
+                { _, hour, minute ->
+                    val time = "%02d:%02d".format(hour, minute)
+                    selectedStart = time
+                    startBtn.text = time
+                },
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                true
+            ).show()
+        }
+
+        endBtn.setOnClickListener {
+            val now = Calendar.getInstance()
+            TimePickerDialog(
+                this,
+                { _, hour, minute ->
+                    val time = "%02d:%02d".format(hour, minute)
+                    selectedEnd = time
+                    endBtn.text = time
+                },
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                true
+            ).show()
+        }
+
+        // Загружаем справочники (предметы + теги) параллельно
+        lifecycleScope.launch {
+            val subjects = withContext(Dispatchers.IO) {
+                ApiClient.dataService(this@TutorDetailActivity).getSubjects(limit = 100)
+            }
+            subjectNameMap = subjects.associate { it.id to it.name }
+
+            val tags = withContext(Dispatchers.IO) {
+                ApiClient.dataService(this@TutorDetailActivity).getTags(limit = 100)
+            }
+            tagNameMap = tags.associate { it.id to it.name }
+
+            loadTutor(
+                tutorId, nameView, subtitleView, ratingView,
+                ratingEff, ratingComm, ratingExp, ratingResp,
+                educationView, studentsView, verifiedView, newBadge,
+                tagsView
+            )
+        }
 
         applyButton.setOnClickListener {
             val studentId = SessionManager(this).getUserId()
@@ -88,11 +175,11 @@ class TutorDetailActivity : AppCompatActivity() {
                 toast("Не найден идентификатор ученика")
                 return@setOnClickListener
             }
-            val date = dateInput.text.toString().trim()
-            val start = startInput.text.toString().trim()
-            val end = endInput.text.toString().trim()
-            if (date.isBlank() || start.isBlank() || end.isBlank()) {
-                toast("Заполните дату и время")
+            val date = selectedDate
+            val start = selectedStart
+            val end = selectedEnd
+            if (date.isNullOrBlank() || start.isNullOrBlank() || end.isNullOrBlank()) {
+                toast("Выберите дату и время")
                 return@setOnClickListener
             }
             val startDateTime = "${date}T${start}:00"
@@ -119,8 +206,6 @@ class TutorDetailActivity : AppCompatActivity() {
             }
         }
 
-        tagsView.text = "Теги: данные будут доступны позже"
-
         loadSchedules(tutorId, scheduleAdapter)
         loadReviews(tutorId, reviewsAdapter)
     }
@@ -129,28 +214,105 @@ class TutorDetailActivity : AppCompatActivity() {
         tutorId: String,
         nameView: TextView,
         subtitleView: TextView,
-        ratingView: TextView
+        ratingView: TextView,
+        ratingEff: TextView,
+        ratingComm: TextView,
+        ratingExp: TextView,
+        ratingResp: TextView,
+        educationView: TextView,
+        studentsView: TextView,
+        verifiedView: TextView,
+        newBadge: TextView,
+        tagsView: TextView
     ) {
         lifecycleScope.launch {
             try {
-                val profiles = withContext(Dispatchers.IO) {
+                val profile = withContext(Dispatchers.IO) {
                     ApiClient.dataService(this@TutorDetailActivity)
-                        .getTutorProfiles(ApiFilters.eq(tutorId))
+                        .getTutorProfile(tutorId)
                 }
-                val profile = profiles.firstOrNull()
-                if (profile != null) {
-                    nameView.text = profile.full_name
-                    subtitleView.text = listOfNotNull(
-                        profile.specialization,
-                        profile.hourly_rate?.let { "Ставка $it" },
-                        profile.experience_years?.let { "Опыт $it" }
-                    ).joinToString(" • ")
-                    ratingView.text = "Рейтинг: ${profile.rating_overall ?: 0.0}"
+
+                // имя
+                nameView.text = profile.full_name
+
+                // подзаголовок: предмет • ставка • опыт
+                val subjectLabel = profile.subject_id?.let { id ->
+                    "Предмет ${subjectNameMap[id] ?: id}"
                 }
+                subtitleView.text = listOfNotNull(
+                    subjectLabel,
+                    profile.hourly_rate?.let { "Ставка $it ₽" },
+                    profile.experience_years?.let { "Опыт $it лет" },
+                    profile.student_count?.let { "Учеников: $it" }
+                ).joinToString(" • ")
+
+                // средний рейтинг
+                val ratings = listOfNotNull(
+                    profile.rating_efficiency,
+                    profile.rating_communication,
+                    profile.rating_expertise,
+                    profile.rating_responsiveness
+                )
+                val avg = if (ratings.isNotEmpty()) ratings.average() else 0.0
+                ratingView.text = "Средний рейтинг: ${"%.0f%%".format(avg * 100)}"
+
+                // детальные рейтинги
+                ratingEff.text = "Эффективность: ${formatRating(profile.rating_efficiency)}"
+                ratingComm.text = "Общение: ${formatRating(profile.rating_communication)}"
+                ratingExp.text = "Экспертиза: ${formatRating(profile.rating_expertise)}"
+                ratingResp.text = "Отзывчивость: ${formatRating(profile.rating_responsiveness)}"
+
+                // образование
+                if (!profile.education.isNullOrBlank()) {
+                    educationView.text = "🎓 ${profile.education}"
+                    educationView.visibility = android.view.View.VISIBLE
+                }
+
+                // ученики
+                studentsView.text = profile.student_count?.let { "👨‍🎓 Учеников: $it" } ?: "👨‍🎓 Учеников: 0"
+
+                // верификация
+                if (profile.is_verified == true) {
+                    verifiedView.text = "✅ Верифицирован"
+                    verifiedView.visibility = android.view.View.VISIBLE
+                }
+
+                // новичок
+                if (profile.is_new_boost == true) {
+                    newBadge.text = "⭐ Новый репетитор (повышение в поиске)"
+                    newBadge.visibility = android.view.View.VISIBLE
+                }
+
+                // теги
+                loadTutorTags(tutorId, tagsView)
+
             } catch (ex: Exception) {
                 toast("Не удалось загрузить данные: ${ex.message}")
             }
         }
+    }
+
+    private suspend fun loadTutorTags(tutorId: String, tagsView: TextView) {
+        try {
+            val tutorTags = withContext(Dispatchers.IO) {
+                ApiClient.dataService(this@TutorDetailActivity).getTutorTags(tutorId)
+            }
+            if (tutorTags.isNotEmpty()) {
+                val tagNames = tutorTags.mapNotNull { tt ->
+                    tagNameMap[tt.tag_id]
+                }
+                if (tagNames.isNotEmpty()) {
+                    tagsView.text = "🏷️ Теги: ${tagNames.joinToString(", ")}"
+                    tagsView.visibility = android.view.View.VISIBLE
+                }
+            }
+        } catch (_: Exception) {
+            // игнорируем ошибку загрузки тегов
+        }
+    }
+
+    private fun formatRating(value: Double?): String {
+        return if (value != null) "%.0f%%".format(value * 100) else "—"
     }
 
     private fun loadSchedules(tutorId: String, adapter: SimpleItemAdapter) {
@@ -158,12 +320,12 @@ class TutorDetailActivity : AppCompatActivity() {
             try {
                 val slots = withContext(Dispatchers.IO) {
                     ApiClient.dataService(this@TutorDetailActivity)
-                        .getSchedules(ApiFilters.eq(tutorId))
+                        .getSchedules(tutorId)
                 }
                 val items = slots.map { slot ->
                     SimpleItem(
                         id = slot.id.toString(),
-                        title = "День ${slot.day_of_week}",
+                        title = dayNames.getOrElse(slot.day_of_week?.minus(1) ?: -1) { "День ${slot.day_of_week}" },
                         subtitle = "${slot.start_time} - ${slot.end_time}"
                     )
                 }
@@ -179,7 +341,7 @@ class TutorDetailActivity : AppCompatActivity() {
             try {
                 val reviews = withContext(Dispatchers.IO) {
                     ApiClient.dataService(this@TutorDetailActivity)
-                        .getReviews(ApiFilters.eq(tutorId))
+                        .getReviews(tutorId)
                 }
                 val items = reviews.map { review ->
                     SimpleItem(

@@ -1,134 +1,134 @@
 [
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\menu_tutor_bottom_nav.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\menu\\tutor_bottom_nav.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_test.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_test.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_student_main.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_student_main.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_item_message.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/item_message.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\drawable_bg_input.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\drawable\\bg_input.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_student_chats.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_student_chats.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_test.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_test.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_tutor_students.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_tutor_students.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\drawable_bg_button_outline.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\drawable\\bg_button_outline.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_lesson_detail.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_lesson_detail.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_student_progress.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_student_progress.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_chat.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_chat.xml"
+        "merged": "com.tutorplatform.app-merged_res-38:/layout_activity_tutor_detail.xml.flat",
+        "source": "com.tutorplatform.app-main-40:/layout/activity_tutor_detail.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\menu_student_bottom_nav.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\menu\\student_bottom_nav.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\drawable_ic_launcher_foreground.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\drawable\\ic_launcher_foreground.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_student_main.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_student_main.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_lesson_detail.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_lesson_detail.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_student_calendar.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_student_calendar.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_student_profile.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_student_profile.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_student_profile.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_student_profile.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\drawable_bg_gradient.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\drawable\\bg_gradient.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_tutor_schedule.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_tutor_schedule.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_tutor_detail.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_tutor_detail.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_chat.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_chat.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_student_search.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_student_search.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_tutor_profile.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_tutor_profile.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_tutor_students.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_tutor_students.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\mipmap-anydpi-v26\\ic_launcher.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/menu_student_bottom_nav.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/menu/student_bottom_nav.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_tutor_requests.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_tutor_requests.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_login.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_login.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_tutor_schedule.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_tutor_schedule.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_splash.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_splash.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_splash.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_splash.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/drawable_rounded_rect_shape.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/drawable/rounded_rect_shape.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_student_search.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_student_search.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_login.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_login.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_tutor_requests.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_tutor_requests.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\drawable_bg_chip.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\drawable\\bg_chip.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_tutor_main.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_tutor_main.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_tutor_dashboard.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_tutor_dashboard.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_student_progress.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_student_progress.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_student_chats.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_student_chats.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_tutor_detail.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_tutor_detail.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_item_message.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\item_message.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/menu_tutor_bottom_nav.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/menu/tutor_bottom_nav.xml"
     },
     {
-        "merged": "com.tutorplatform.app-merged_res-36:/layout_activity_registration.xml.flat",
-        "source": "com.tutorplatform.app-main-38:/layout/activity_registration.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_item_section_divider.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/item_section_divider.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\drawable_bg_card.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\drawable\\bg_card.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_fragment_tutor_dashboard.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/fragment_tutor_dashboard.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_tutor_profile.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_tutor_profile.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_registration_new.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_registration_new.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_fragment_student_calendar.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\fragment_student_calendar.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_activity_registration.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/activity_registration.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_item_simple.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\item_simple.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_item_application.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/item_application.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\drawable_bg_button_primary.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\drawable\\bg_button_primary.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_item_simple.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/item_simple.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_activity_tutor_main.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\activity_tutor_main.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_item_lesson.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/item_lesson.xml"
     },
     {
-        "merged": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-merged_res-36:\\layout_item_application.xml.flat",
-        "source": "C:\\Users\\Anastasia\\.gradle\\daemon\\8.5\\com.tutorplatform.app-main-38:\\layout\\item_application.xml"
+        "merged": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-merged_res-38:/layout_item_section_header.xml.flat",
+        "source": "/home/mrwight/.gradle/daemon/8.5/com.tutorplatform.app-main-40:/layout/item_section_header.xml"
     }
 ]

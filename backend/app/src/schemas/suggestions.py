@@ -9,6 +9,7 @@ class ScheduleSlot(BaseModel):
     start_time: time
     end_time: time
 
+
 class SuggestionWeights(BaseModel):
     k1_effectiveness: float = Field(default=0.30, ge=0.0, le=1.0)
     k2_communication: float = Field(default=0.15, ge=0.0, le=1.0)
@@ -27,14 +28,16 @@ class SuggestionWeights(BaseModel):
         )
         return abs(total - 1.0) < 0.001
 
+
 class SuggestionRequest(BaseModel):
-    subject_id: int
+    subject_id: UUID
     max_price: int | None = None
     min_experience: int | None = Field(default=0, ge=0)
     verified_only: bool | None = False
     schedule_slots: list[ScheduleSlot] | None = None
-    required_tag_ids: list[int] | None = None
+    required_tag_ids: list[UUID] | None = None
     weights: SuggestionWeights | None = None
+
 
 class ScoreBreakdown(BaseModel):
     o1: float
@@ -42,6 +45,7 @@ class ScoreBreakdown(BaseModel):
     o3: float
     o4: float
     o5: float
+
 
 class SuggestionResponse(BaseModel):
     tutor_id: UUID

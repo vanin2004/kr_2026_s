@@ -4,12 +4,13 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -17,24 +18,28 @@ import java.lang.String;
 
 public final class ItemMessageBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final FrameLayout rootView;
 
   @NonNull
-  public final TextView messageMeta;
+  public final MaterialCardView messageBubble;
 
   @NonNull
-  public final TextView messageText;
+  public final MaterialTextView messageMeta;
 
-  private ItemMessageBinding(@NonNull LinearLayout rootView, @NonNull TextView messageMeta,
-      @NonNull TextView messageText) {
+  @NonNull
+  public final MaterialTextView messageText;
+
+  private ItemMessageBinding(@NonNull FrameLayout rootView, @NonNull MaterialCardView messageBubble,
+      @NonNull MaterialTextView messageMeta, @NonNull MaterialTextView messageText) {
     this.rootView = rootView;
+    this.messageBubble = messageBubble;
     this.messageMeta = messageMeta;
     this.messageText = messageText;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public FrameLayout getRoot() {
     return rootView;
   }
 
@@ -59,19 +64,26 @@ public final class ItemMessageBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.message_bubble;
+      MaterialCardView messageBubble = ViewBindings.findChildViewById(rootView, id);
+      if (messageBubble == null) {
+        break missingId;
+      }
+
       id = R.id.message_meta;
-      TextView messageMeta = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView messageMeta = ViewBindings.findChildViewById(rootView, id);
       if (messageMeta == null) {
         break missingId;
       }
 
       id = R.id.message_text;
-      TextView messageText = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView messageText = ViewBindings.findChildViewById(rootView, id);
       if (messageText == null) {
         break missingId;
       }
 
-      return new ItemMessageBinding((LinearLayout) rootView, messageMeta, messageText);
+      return new ItemMessageBinding((FrameLayout) rootView, messageBubble, messageMeta,
+          messageText);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

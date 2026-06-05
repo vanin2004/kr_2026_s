@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
@@ -13,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -23,13 +24,34 @@ public final class FragmentTutorScheduleBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final Button scheduleAdd;
+  public final MaterialButton scheduleAdd;
 
   @NonNull
-  public final EditText scheduleDay;
+  public final Button scheduleDayFri;
 
   @NonNull
-  public final EditText scheduleEnd;
+  public final Button scheduleDayMon;
+
+  @NonNull
+  public final Button scheduleDaySat;
+
+  @NonNull
+  public final Button scheduleDaySun;
+
+  @NonNull
+  public final Button scheduleDayThu;
+
+  @NonNull
+  public final MaterialButtonToggleGroup scheduleDayToggle;
+
+  @NonNull
+  public final Button scheduleDayTue;
+
+  @NonNull
+  public final Button scheduleDayWed;
+
+  @NonNull
+  public final MaterialButton scheduleEndBtn;
 
   @NonNull
   public final RecyclerView scheduleList;
@@ -38,7 +60,7 @@ public final class FragmentTutorScheduleBinding implements ViewBinding {
   public final ProgressBar scheduleProgress;
 
   @NonNull
-  public final EditText scheduleStart;
+  public final MaterialButton scheduleStartBtn;
 
   @NonNull
   public final RecyclerView tutorLessonsList;
@@ -46,18 +68,29 @@ public final class FragmentTutorScheduleBinding implements ViewBinding {
   @NonNull
   public final ProgressBar tutorLessonsProgress;
 
-  private FragmentTutorScheduleBinding(@NonNull ScrollView rootView, @NonNull Button scheduleAdd,
-      @NonNull EditText scheduleDay, @NonNull EditText scheduleEnd,
+  private FragmentTutorScheduleBinding(@NonNull ScrollView rootView,
+      @NonNull MaterialButton scheduleAdd, @NonNull Button scheduleDayFri,
+      @NonNull Button scheduleDayMon, @NonNull Button scheduleDaySat,
+      @NonNull Button scheduleDaySun, @NonNull Button scheduleDayThu,
+      @NonNull MaterialButtonToggleGroup scheduleDayToggle, @NonNull Button scheduleDayTue,
+      @NonNull Button scheduleDayWed, @NonNull MaterialButton scheduleEndBtn,
       @NonNull RecyclerView scheduleList, @NonNull ProgressBar scheduleProgress,
-      @NonNull EditText scheduleStart, @NonNull RecyclerView tutorLessonsList,
+      @NonNull MaterialButton scheduleStartBtn, @NonNull RecyclerView tutorLessonsList,
       @NonNull ProgressBar tutorLessonsProgress) {
     this.rootView = rootView;
     this.scheduleAdd = scheduleAdd;
-    this.scheduleDay = scheduleDay;
-    this.scheduleEnd = scheduleEnd;
+    this.scheduleDayFri = scheduleDayFri;
+    this.scheduleDayMon = scheduleDayMon;
+    this.scheduleDaySat = scheduleDaySat;
+    this.scheduleDaySun = scheduleDaySun;
+    this.scheduleDayThu = scheduleDayThu;
+    this.scheduleDayToggle = scheduleDayToggle;
+    this.scheduleDayTue = scheduleDayTue;
+    this.scheduleDayWed = scheduleDayWed;
+    this.scheduleEndBtn = scheduleEndBtn;
     this.scheduleList = scheduleList;
     this.scheduleProgress = scheduleProgress;
-    this.scheduleStart = scheduleStart;
+    this.scheduleStartBtn = scheduleStartBtn;
     this.tutorLessonsList = tutorLessonsList;
     this.tutorLessonsProgress = tutorLessonsProgress;
   }
@@ -90,20 +123,62 @@ public final class FragmentTutorScheduleBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.schedule_add;
-      Button scheduleAdd = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton scheduleAdd = ViewBindings.findChildViewById(rootView, id);
       if (scheduleAdd == null) {
         break missingId;
       }
 
-      id = R.id.schedule_day;
-      EditText scheduleDay = ViewBindings.findChildViewById(rootView, id);
-      if (scheduleDay == null) {
+      id = R.id.schedule_day_fri;
+      Button scheduleDayFri = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDayFri == null) {
         break missingId;
       }
 
-      id = R.id.schedule_end;
-      EditText scheduleEnd = ViewBindings.findChildViewById(rootView, id);
-      if (scheduleEnd == null) {
+      id = R.id.schedule_day_mon;
+      Button scheduleDayMon = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDayMon == null) {
+        break missingId;
+      }
+
+      id = R.id.schedule_day_sat;
+      Button scheduleDaySat = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDaySat == null) {
+        break missingId;
+      }
+
+      id = R.id.schedule_day_sun;
+      Button scheduleDaySun = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDaySun == null) {
+        break missingId;
+      }
+
+      id = R.id.schedule_day_thu;
+      Button scheduleDayThu = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDayThu == null) {
+        break missingId;
+      }
+
+      id = R.id.schedule_day_toggle;
+      MaterialButtonToggleGroup scheduleDayToggle = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDayToggle == null) {
+        break missingId;
+      }
+
+      id = R.id.schedule_day_tue;
+      Button scheduleDayTue = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDayTue == null) {
+        break missingId;
+      }
+
+      id = R.id.schedule_day_wed;
+      Button scheduleDayWed = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleDayWed == null) {
+        break missingId;
+      }
+
+      id = R.id.schedule_end_btn;
+      MaterialButton scheduleEndBtn = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleEndBtn == null) {
         break missingId;
       }
 
@@ -119,9 +194,9 @@ public final class FragmentTutorScheduleBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.schedule_start;
-      EditText scheduleStart = ViewBindings.findChildViewById(rootView, id);
-      if (scheduleStart == null) {
+      id = R.id.schedule_start_btn;
+      MaterialButton scheduleStartBtn = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleStartBtn == null) {
         break missingId;
       }
 
@@ -137,9 +212,10 @@ public final class FragmentTutorScheduleBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentTutorScheduleBinding((ScrollView) rootView, scheduleAdd, scheduleDay,
-          scheduleEnd, scheduleList, scheduleProgress, scheduleStart, tutorLessonsList,
-          tutorLessonsProgress);
+      return new FragmentTutorScheduleBinding((ScrollView) rootView, scheduleAdd, scheduleDayFri,
+          scheduleDayMon, scheduleDaySat, scheduleDaySun, scheduleDayThu, scheduleDayToggle,
+          scheduleDayTue, scheduleDayWed, scheduleEndBtn, scheduleList, scheduleProgress,
+          scheduleStartBtn, tutorLessonsList, tutorLessonsProgress);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

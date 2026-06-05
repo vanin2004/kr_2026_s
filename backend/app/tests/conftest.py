@@ -28,7 +28,6 @@ from models.tables import (
     Lesson,
     Message,
     Review,
-    Schedule,
     StudentPreferredTag,
     StudentProfile,
     StudentResult,

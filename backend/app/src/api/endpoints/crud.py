@@ -8,7 +8,7 @@ import uuid
 from typing import Type
 
 from db.session import get_db
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models.base import Base as BaseModelClass
 from models.tables import (
     Application,
@@ -29,7 +29,6 @@ from models.tables import (
     TutorTag,
     User,
 )
-from pydantic import BaseModel
 from schemas.api import (
     ApplicationCreate,
     ApplicationRead,
@@ -45,6 +44,7 @@ from schemas.api import (
     MessageUpdate,
     ReviewCreate,
     ReviewRead,
+    ReviewUpdate,
     ScheduleCreate,
     ScheduleRead,
     ScheduleUpdate,
@@ -64,8 +64,10 @@ from schemas.api import (
     TagUpdate,
     TestLibraryCreate,
     TestLibraryRead,
+    TestLibraryUpdate,
     TutorCertificationCreate,
     TutorCertificationRead,
+    TutorCertificationUpdate,
     TutorProfileCreate,
     TutorProfileRead,
     TutorProfileUpdate,
@@ -73,7 +75,8 @@ from schemas.api import (
     TutorTagRead,
     UserRead,
 )
-from sqlalchemy import delete, select, update
+from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
@@ -131,143 +134,6 @@ def _apply_filters(stmt, model: Type[BaseModelClass], query_params: dict[str, st
     return stmt
 
 
-def _register_crud(
-    router: APIRouter,
-    prefix: str,
-    model: Type[BaseModelClass],
-    read_schema: Type[BaseModel],
-    create_schema: Type[BaseModel] | None = None,
-    update_schema: Type[BaseModel] | None = None,
-    tags: list[str] | None = None,
-):
-    """Dynamically register CRUD endpoints for a model."""
-    if tags is None:
-        tags = [prefix.replace("/", "")]
-
-    model_name = model.__name__
-
-    # GET list
-    @router.get(
-        prefix,
-        response_model=list[read_schema],
-        tags=tags,
-        summary=f"List {model_name}",
-    )
-    async def list_items(
-        request: Request,
-        db: AsyncSession = Depends(get_db),
-        limit: int = Query(100, ge=1, le=1000),
-        offset: int = Query(0, ge=0),
-    ):
-        stmt = select(model)
-
-        # Known filters to exclude
-        reserved_filters = {"limit", "offset"}
-        actual_filters = {
-            k: v for k, v in request.query_params.items() if k not in reserved_filters
-        }
-
-        stmt = _apply_filters(stmt, model, actual_filters)
-        stmt = stmt.offset(offset).limit(limit)
-        result = await db.execute(stmt)
-        items = result.scalars().all()
-        return items
-
-    # GET single by id (assumes id column exists)
-    if hasattr(model, "id"):
-
-        @router.get(
-            f"{prefix}/{{item_id}}",
-            response_model=read_schema,
-            tags=tags,
-            summary=f"Get {model_name} by ID",
-        )
-        async def get_item(item_id: int, db: AsyncSession = Depends(get_db)):
-            stmt = select(model).where(model.id == item_id)
-            result = await db.execute(stmt)
-            item = result.scalar_one_or_none()
-            if not item:
-                raise HTTPException(status_code=404, detail=f"{model_name} not found")
-            return item
-
-    # POST create
-    if create_schema:
-
-        @router.post(
-            prefix,
-            response_model=read_schema,
-            status_code=status.HTTP_201_CREATED,
-            tags=tags,
-            summary=f"Create {model_name}",
-        )
-        async def create_item(
-            data: create_schema,  # type: ignore
-            db: AsyncSession = Depends(get_db),
-        ):
-            item = model(**data.model_dump())
-            db.add(item)
-            await db.flush()
-            await db.refresh(item)
-            return item
-
-    # PATCH update
-    if update_schema and hasattr(model, "id"):
-
-        @router.patch(
-            f"{prefix}/{{item_id}}",
-            response_model=read_schema,
-            tags=tags,
-            summary=f"Update {model_name}",
-        )
-        async def update_item(
-            item_id: int,
-            data: update_schema,  # type: ignore
-            db: AsyncSession = Depends(get_db),
-        ):
-            stmt = select(model).where(model.id == item_id)
-            result = await db.execute(stmt)
-            item = result.scalar_one_or_none()
-            if not item:
-                raise HTTPException(status_code=404, detail=f"{model_name} not found")
-
-            update_data = data.model_dump(exclude_unset=True)
-            if update_data:
-                await db.execute(
-                    update(model).where(model.id == item_id).values(**update_data)
-                )
-                await db.flush()
-                await db.refresh(item)
-            return item
-
-    # DELETE
-    if hasattr(model, "id"):
-
-        @router.delete(
-            f"{prefix}/{{item_id}}",
-            status_code=status.HTTP_204_NO_CONTENT,
-            tags=tags,
-            summary=f"Delete {model_name}",
-        )
-        async def delete_item(item_id: int, db: AsyncSession = Depends(get_db)):
-            stmt = select(model).where(model.id == item_id)
-            result = await db.execute(stmt)
-            item = result.scalar_one_or_none()
-            if not item:
-                raise HTTPException(status_code=404, detail=f"{model_name} not found")
-            await db.delete(item)
-            await db.flush()
-            return None
-
-
-# Register CRUD for all tables
-_register_crud(router, "/subjects", Subject, SubjectRead, SubjectCreate, SubjectUpdate)
-_register_crud(router, "/tags", Tag, TagRead, TagCreate, TagUpdate)
-
-# Note: for UUID PK models, we register manually below because
-# the auto-registration assumes int PK for the /{item_id} route
-# We override with manual endpoints for UUID-based tables.
-
-
 # ─── Users ──────────────────────────────────────────────────────
 @router.get("/users", response_model=list[UserRead], tags=["users"])
 async def list_users(
@@ -303,6 +169,150 @@ async def delete_user(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     await db.flush()
 
 
+# ─── Subjects (UUID PK) ─────────────────────────────────────────
+@router.get("/subjects", response_model=list[SubjectRead], tags=["subjects"])
+async def list_subjects(
+    db: AsyncSession = Depends(get_db),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+):
+    stmt = select(Subject).offset(offset).limit(limit)
+    result = await db.execute(stmt)
+    return result.scalars().all()
+
+
+@router.get("/subjects/{subject_id}", response_model=SubjectRead, tags=["subjects"])
+async def get_subject(subject_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Subject).where(Subject.id == subject_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Subject not found")
+    return item
+
+
+@router.post(
+    "/subjects",
+    response_model=SubjectRead,
+    status_code=status.HTTP_201_CREATED,
+    tags=["subjects"],
+)
+async def create_subject(data: SubjectCreate, db: AsyncSession = Depends(get_db)):
+    item = Subject(**data.model_dump())
+    db.add(item)
+    await db.flush()
+    await db.refresh(item)
+    return item
+
+
+@router.patch("/subjects/{subject_id}", response_model=SubjectRead, tags=["subjects"])
+async def update_subject(
+    subject_id: uuid.UUID,
+    data: SubjectUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(Subject).where(Subject.id == subject_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Subject not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    if update_data:
+        await db.execute(
+            update(Subject).where(Subject.id == subject_id).values(**update_data)
+        )
+        await db.flush()
+        await db.refresh(item)
+    return item
+
+
+@router.delete(
+    "/subjects/{subject_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["subjects"],
+)
+async def delete_subject(subject_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Subject).where(Subject.id == subject_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Subject not found")
+    await db.delete(item)
+    await db.flush()
+
+
+# ─── Tags (UUID PK) ─────────────────────────────────────────────
+@router.get("/tags", response_model=list[TagRead], tags=["tags"])
+async def list_tags(
+    db: AsyncSession = Depends(get_db),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+):
+    stmt = select(Tag).offset(offset).limit(limit)
+    result = await db.execute(stmt)
+    return result.scalars().all()
+
+
+@router.get("/tags/{tag_id}", response_model=TagRead, tags=["tags"])
+async def get_tag(tag_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Tag).where(Tag.id == tag_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    return item
+
+
+@router.post(
+    "/tags",
+    response_model=TagRead,
+    status_code=status.HTTP_201_CREATED,
+    tags=["tags"],
+)
+async def create_tag(data: TagCreate, db: AsyncSession = Depends(get_db)):
+    item = Tag(**data.model_dump())
+    db.add(item)
+    await db.flush()
+    await db.refresh(item)
+    return item
+
+
+@router.patch("/tags/{tag_id}", response_model=TagRead, tags=["tags"])
+async def update_tag(
+    tag_id: uuid.UUID,
+    data: TagUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(Tag).where(Tag.id == tag_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Tag not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    if update_data:
+        await db.execute(update(Tag).where(Tag.id == tag_id).values(**update_data))
+        await db.flush()
+        await db.refresh(item)
+    return item
+
+
+@router.delete(
+    "/tags/{tag_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["tags"],
+)
+async def delete_tag(tag_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Tag).where(Tag.id == tag_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    await db.delete(item)
+    await db.flush()
+
+
 # ─── Tutor Profiles ─────────────────────────────────────────────
 @router.get(
     "/tutor_profiles", response_model=list[TutorProfileRead], tags=["tutor_profiles"]
@@ -311,7 +321,7 @@ async def list_tutor_profiles(
     db: AsyncSession = Depends(get_db),
     limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
-    subject_id: int | None = Query(None),
+    subject_id: uuid.UUID | None = Query(None),
     hourly_rate_lte: int | None = Query(None),
 ):
     stmt = select(TutorProfile).offset(offset).limit(limit)
@@ -398,6 +408,21 @@ async def delete_tutor_profile(user_id: uuid.UUID, db: AsyncSession = Depends(ge
 
 # ─── Student Profiles ───────────────────────────────────────────
 @router.get(
+    "/student_profiles",
+    response_model=list[StudentProfileRead],
+    tags=["student_profiles"],
+)
+async def list_student_profiles(
+    db: AsyncSession = Depends(get_db),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+):
+    stmt = select(StudentProfile).offset(offset).limit(limit)
+    result = await db.execute(stmt)
+    return result.scalars().all()
+
+
+@router.get(
     "/student_profiles/{user_id}",
     response_model=StudentProfileRead,
     tags=["student_profiles"],
@@ -464,12 +489,31 @@ async def update_student_profile(
     return profile
 
 
+@router.delete(
+    "/student_profiles/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["student_profiles"],
+)
+async def delete_student_profile(
+    user_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+):
+    stmt = select(StudentProfile).where(StudentProfile.user_id == user_id)
+    result = await db.execute(stmt)
+    profile = result.scalar_one_or_none()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Student profile not found")
+    await db.delete(profile)
+    await db.flush()
+
+
 # ─── Tutor Tags (composite PK) ──────────────────────────────────
+
+
 @router.get("/tutor_tags", response_model=list[TutorTagRead], tags=["tutor_tags"])
 async def list_tutor_tags(
     db: AsyncSession = Depends(get_db),
     tutor_id: uuid.UUID | None = Query(None),
-    tag_id: int | None = Query(None),
+    tag_id: uuid.UUID | None = Query(None),
 ):
     stmt = select(TutorTag)
     if tutor_id is not None:
@@ -501,7 +545,7 @@ async def create_tutor_tag(data: TutorTagCreate, db: AsyncSession = Depends(get_
 )
 async def delete_tutor_tag(
     tutor_id: uuid.UUID = Query(...),
-    tag_id: int = Query(...),
+    tag_id: uuid.UUID = Query(...),
     db: AsyncSession = Depends(get_db),
 ):
     stmt = select(TutorTag).where(
@@ -555,7 +599,7 @@ async def create_student_preferred_tag(
 )
 async def delete_student_preferred_tag(
     student_id: uuid.UUID = Query(...),
-    tag_id: int = Query(...),
+    tag_id: uuid.UUID = Query(...),
     db: AsyncSession = Depends(get_db),
 ):
     stmt = select(StudentPreferredTag).where(
@@ -601,6 +645,63 @@ async def create_tutor_certification(
     await db.flush()
     await db.refresh(cert)
     return cert
+
+
+@router.get(
+    "/tutor_certifications/{cert_id}",
+    response_model=TutorCertificationRead,
+    tags=["tutor_certifications"],
+)
+async def get_tutor_certification(cert_id: int, db: AsyncSession = Depends(get_db)):
+    stmt = select(TutorCertification).where(TutorCertification.id == cert_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Tutor certification not found")
+    return item
+
+
+@router.patch(
+    "/tutor_certifications/{cert_id}",
+    response_model=TutorCertificationRead,
+    tags=["tutor_certifications"],
+)
+async def update_tutor_certification(
+    cert_id: int,
+    data: TutorCertificationUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(TutorCertification).where(TutorCertification.id == cert_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Tutor certification not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    if update_data:
+        await db.execute(
+            update(TutorCertification)
+            .where(TutorCertification.id == cert_id)
+            .values(**update_data)
+        )
+        await db.flush()
+        await db.refresh(item)
+    return item
+
+
+@router.delete(
+    "/tutor_certifications/{cert_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["tutor_certifications"],
+)
+async def delete_tutor_certification(cert_id: int, db: AsyncSession = Depends(get_db)):
+    stmt = select(TutorCertification).where(TutorCertification.id == cert_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Tutor certification not found")
+    await db.delete(item)
+    await db.flush()
 
 
 # ─── Schedules ──────────────────────────────────────────────────
@@ -790,9 +891,31 @@ async def list_applications(
 async def create_application(
     data: ApplicationCreate, db: AsyncSession = Depends(get_db)
 ):
+    # Проверяем, что student и tutor существуют
+    student = await db.execute(select(User).where(User.id == data.student_id))
+    if not student.scalar_one_or_none():
+        raise HTTPException(
+            status_code=404,
+            detail=f"User (student) with id {data.student_id} not found",
+        )
+
+    tutor = await db.execute(select(User).where(User.id == data.tutor_id))
+    if not tutor.scalar_one_or_none():
+        raise HTTPException(
+            status_code=404,
+            detail=f"User (tutor) with id {data.tutor_id} not found",
+        )
+
     item = Application(**data.model_dump())
     db.add(item)
-    await db.flush()
+    try:
+        await db.flush()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Application already exists for this student-tutor pair",
+        )
     await db.refresh(item)
     return item
 
@@ -899,6 +1022,20 @@ async def list_chats(
     return result.scalars().all()
 
 
+@router.get(
+    "/chats/{chat_id}",
+    response_model=ChatRead,
+    tags=["chats"],
+)
+async def get_chat(chat_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Chat).where(Chat.id == chat_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Chat not found")
+    return item
+
+
 # ─── Messages ───────────────────────────────────────────────────
 @router.get("/messages", response_model=list[MessageRead], tags=["messages"])
 async def list_messages(
@@ -955,6 +1092,35 @@ async def update_message(
     return item
 
 
+@router.get(
+    "/messages/{message_id}",
+    response_model=MessageRead,
+    tags=["messages"],
+)
+async def get_message(message_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Message).where(Message.id == message_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Message not found")
+    return item
+
+
+@router.delete(
+    "/messages/{message_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["messages"],
+)
+async def delete_message(message_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Message).where(Message.id == message_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Message not found")
+    await db.delete(item)
+    await db.flush()
+
+
 # ─── Test Library ───────────────────────────────────────────────
 @router.get(
     "/test_library",
@@ -963,7 +1129,7 @@ async def update_message(
 )
 async def list_test_library(
     db: AsyncSession = Depends(get_db),
-    subject_id: int | None = Query(None),
+    subject_id: uuid.UUID | None = Query(None),
 ):
     stmt = select(TestLibrary)
     if subject_id is not None:
@@ -986,6 +1152,61 @@ async def create_test_library(
     await db.flush()
     await db.refresh(item)
     return item
+
+
+@router.get(
+    "/test_library/{test_id}",
+    response_model=TestLibraryRead,
+    tags=["test_library"],
+)
+async def get_test_library(test_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(TestLibrary).where(TestLibrary.id == test_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Test library entry not found")
+    return item
+
+
+@router.patch(
+    "/test_library/{test_id}",
+    response_model=TestLibraryRead,
+    tags=["test_library"],
+)
+async def update_test_library(
+    test_id: uuid.UUID,
+    data: TestLibraryUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(TestLibrary).where(TestLibrary.id == test_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Test library entry not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    if update_data:
+        await db.execute(
+            update(TestLibrary).where(TestLibrary.id == test_id).values(**update_data)
+        )
+        await db.flush()
+        await db.refresh(item)
+    return item
+
+
+@router.delete(
+    "/test_library/{test_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["test_library"],
+)
+async def delete_test_library(test_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(TestLibrary).where(TestLibrary.id == test_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Test library entry not found")
+    await db.delete(item)
+    await db.flush()
 
 
 # ─── Student Results ────────────────────────────────────────────
@@ -1052,6 +1273,37 @@ async def update_student_result(
     return item
 
 
+@router.get(
+    "/student_results/{result_id}",
+    response_model=StudentResultRead,
+    tags=["student_results"],
+)
+async def get_student_result(result_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(StudentResult).where(StudentResult.id == result_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Student result not found")
+    return item
+
+
+@router.delete(
+    "/student_results/{result_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["student_results"],
+)
+async def delete_student_result(
+    result_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+):
+    stmt = select(StudentResult).where(StudentResult.id == result_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Student result not found")
+    await db.delete(item)
+    await db.flush()
+
+
 # ─── Reviews ────────────────────────────────────────────────────
 @router.get("/reviews", response_model=list[ReviewRead], tags=["reviews"])
 async def list_reviews(
@@ -1082,6 +1334,61 @@ async def create_review(data: ReviewCreate, db: AsyncSession = Depends(get_db)):
     await db.flush()
     await db.refresh(item)
     return item
+
+
+@router.get(
+    "/reviews/{review_id}",
+    response_model=ReviewRead,
+    tags=["reviews"],
+)
+async def get_review(review_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Review).where(Review.id == review_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Review not found")
+    return item
+
+
+@router.patch(
+    "/reviews/{review_id}",
+    response_model=ReviewRead,
+    tags=["reviews"],
+)
+async def update_review(
+    review_id: uuid.UUID,
+    data: ReviewUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(Review).where(Review.id == review_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Review not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    if update_data:
+        await db.execute(
+            update(Review).where(Review.id == review_id).values(**update_data)
+        )
+        await db.flush()
+        await db.refresh(item)
+    return item
+
+
+@router.delete(
+    "/reviews/{review_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["reviews"],
+)
+async def delete_review(review_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    stmt = select(Review).where(Review.id == review_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Review not found")
+    await db.delete(item)
+    await db.flush()
 
 
 # ─── Device Tokens ──────────────────────────────────────────────
@@ -1130,3 +1437,17 @@ async def delete_device_token(token_id: int, db: AsyncSession = Depends(get_db))
         raise HTTPException(status_code=404, detail="Device token not found")
     await db.delete(item)
     await db.flush()
+
+
+@router.get(
+    "/device_tokens/{token_id}",
+    response_model=DeviceTokenRead,
+    tags=["device_tokens"],
+)
+async def get_device_token(token_id: int, db: AsyncSession = Depends(get_db)):
+    stmt = select(DeviceToken).where(DeviceToken.id == token_id)
+    result = await db.execute(stmt)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Device token not found")
+    return item

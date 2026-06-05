@@ -16,7 +16,7 @@ import com.tutorplatform.app.model.SimpleItem
 import com.tutorplatform.app.model.TestLibrary
 import com.tutorplatform.app.network.ApiClient
 import com.tutorplatform.app.ui.TestActivity
-import com.tutorplatform.app.util.ApiFilters
+import com.google.gson.Gson
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +30,7 @@ class StudentProgressFragment : Fragment(R.layout.fragment_student_progress) {
     private lateinit var testsProgress: ProgressBar
     private var activeTutorId: String? = null
     private var testsMap: Map<String, TestLibrary> = emptyMap()
+    private var subjectNameMap: Map<String, String> = emptyMap()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,7 +57,13 @@ class StudentProgressFragment : Fragment(R.layout.fragment_student_progress) {
 
         loadActiveTutor()
         loadResults()
-        loadTests()
+        lifecycleScope.launch {
+            val subjects = withContext(Dispatchers.IO) {
+                ApiClient.dataService(requireContext()).getSubjects(limit = 100)
+            }
+            subjectNameMap = subjects.associate { it.id to it.name }
+            loadTests()
+        }
     }
 
     override fun onResume() {
@@ -77,13 +84,13 @@ class StudentProgressFragment : Fragment(R.layout.fragment_student_progress) {
             try {
                 val results = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext())
-                        .getStudentResults(ApiFilters.eq(studentId))
+                        .getStudentResults(studentId)
                 }
                 val items = results.map { result ->
                     val scoreText = result.score?.toString() ?: "в процессе"
                     SimpleItem(
                         id = result.id,
-                        title = "Тест ${result.test_id} (${mapTestType(result.type)})",
+                        title = "${mapTestType(result.type).replaceFirstChar { it.uppercase() }} тест",
                         subtitle = "Результат: $scoreText"
                     )
                 }
@@ -103,12 +110,12 @@ class StudentProgressFragment : Fragment(R.layout.fragment_student_progress) {
                 val tests = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext()).getTestLibrary()
                 }
-                testsMap = tests.associateBy { it.id.toString() }
+                testsMap = tests.associateBy { it.id }
                 val items = tests.map { test ->
                     SimpleItem(
-                        id = test.id.toString(),
-                        title = "${test.subject} • ${test.topic}",
-                        subtitle = "Тест №${test.id}"
+                        id = test.id,
+                        title = "${subjectNameMap[test.subject_id] ?: test.subject_id} • ${test.topic}",
+                        subtitle = "Доступен для прохождения"
                     )
                 }
                 testsAdapter.submitList(items)
@@ -128,9 +135,8 @@ class StudentProgressFragment : Fragment(R.layout.fragment_student_progress) {
             try {
                 val apps = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext()).getApplications(
-                        studentIdFilter = ApiFilters.eq(studentId),
-                        statusFilter = ApiFilters.eq("accepted")
-                    )
+                        studentId = studentId
+                    ).filter { it.status == "accepted" }
                 }
                 activeTutorId = apps.firstOrNull()?.tutor_id
             } catch (_: Exception) {
@@ -159,7 +165,7 @@ class StudentProgressFragment : Fragment(R.layout.fragment_student_progress) {
     private fun openTest(test: TestLibrary, studentId: String, tutorId: String, type: String) {
         val intent = Intent(requireContext(), TestActivity::class.java)
         intent.putExtra(TestActivity.EXTRA_TEST_ID, test.id)
-        intent.putExtra(TestActivity.EXTRA_QUESTIONS_JSON, test.questions_json)
+        intent.putExtra(TestActivity.EXTRA_QUESTIONS_JSON, Gson().toJson(test.questions_json))
         intent.putExtra(TestActivity.EXTRA_STUDENT_ID, studentId)
         intent.putExtra(TestActivity.EXTRA_TUTOR_ID, tutorId)
         intent.putExtra(TestActivity.EXTRA_TEST_TYPE, type)

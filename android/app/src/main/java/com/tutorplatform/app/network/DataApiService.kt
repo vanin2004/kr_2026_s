@@ -14,85 +14,147 @@ import com.tutorplatform.app.model.ScheduleSlotCreate
 import com.tutorplatform.app.model.StudentProfile
 import com.tutorplatform.app.model.StudentResult
 import com.tutorplatform.app.model.StudentResultCreate
+import com.tutorplatform.app.model.Subject
+import com.tutorplatform.app.model.Tag
 import com.tutorplatform.app.model.TestLibrary
 import com.tutorplatform.app.model.TutorProfile
+import com.tutorplatform.app.model.TutorTag
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DataApiService {
-    @GET("api/data/tutor_profiles")
-    suspend fun getTutorProfiles(@Query("user_id") userIdFilter: String? = null): List<TutorProfile>
+    // ─── Tutor Profiles ─────────────────────────────────────────
+    @GET("api/custom/tutor_profiles/{user_id}")
+    suspend fun getTutorProfile(@Path("user_id") userId: String): TutorProfile
 
-    @PATCH("api/data/tutor_profiles")
+    @PATCH("api/custom/tutor_profiles/{user_id}")
     suspend fun updateTutorProfile(
-        @Query("user_id") userIdFilter: String,
+        @Path("user_id") userId: String,
         @Body patch: Map<String, Any?>
-    ): List<TutorProfile>
+    ): TutorProfile
 
-    @GET("api/data/student_profiles")
-    suspend fun getStudentProfiles(@Query("user_id") userIdFilter: String? = null): List<StudentProfile>
+    // ─── Student Profiles ───────────────────────────────────────
+    @GET("api/custom/student_profiles/{user_id}")
+    suspend fun getStudentProfile(@Path("user_id") userId: String): StudentProfile
 
-    @PATCH("api/data/student_profiles")
+    @PATCH("api/custom/student_profiles/{user_id}")
     suspend fun updateStudentProfile(
-        @Query("user_id") userIdFilter: String,
+        @Path("user_id") userId: String,
         @Body patch: Map<String, Any?>
-    ): List<StudentProfile>
+    ): StudentProfile
 
-    @GET("api/data/schedules")
-    suspend fun getSchedules(@Query("tutor_id") tutorIdFilter: String? = null): List<ScheduleSlot>
+    // ─── Schedules ──────────────────────────────────────────────
+    @GET("api/custom/schedules")
+    suspend fun getSchedules(
+        @Query("tutor_id") tutorId: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): List<ScheduleSlot>
 
-    @POST("api/data/schedules")
+    @POST("api/custom/schedules")
     suspend fun addSchedule(@Body slot: ScheduleSlotCreate): ScheduleSlot
 
-    @GET("api/data/lessons")
-    suspend fun getLessons(@Query("id") idFilter: String? = null): List<Lesson>
+    // ─── Lessons ────────────────────────────────────────────────
+    @GET("api/custom/lessons")
+    suspend fun getLessons(
+        @Query("student_id") studentId: String? = null,
+        @Query("tutor_id") tutorId: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): List<Lesson>
 
-    @POST("api/data/lessons")
+    @GET("api/custom/lessons/{lesson_id}")
+    suspend fun getLesson(@Path("lesson_id") lessonId: String): Lesson
+
+    @POST("api/custom/lessons")
     suspend fun createLesson(@Body request: LessonCreate): Lesson
 
-    @PATCH("api/data/lessons")
-    suspend fun updateLesson(@Query("id") idFilter: String, @Body patch: Map<String, Any?>): List<Lesson>
+    @PATCH("api/custom/lessons/{lesson_id}")
+    suspend fun updateLesson(
+        @Path("lesson_id") lessonId: String,
+        @Body patch: Map<String, Any?>
+    ): Lesson
 
-    @GET("api/data/applications")
+    // ─── Applications ───────────────────────────────────────────
+    @GET("api/custom/applications")
     suspend fun getApplications(
-        @Query("tutor_id") tutorIdFilter: String? = null,
-        @Query("student_id") studentIdFilter: String? = null,
-        @Query("status") statusFilter: String? = null
+        @Query("tutor_id") tutorId: String? = null,
+        @Query("student_id") studentId: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
     ): List<Application>
 
-    @POST("api/data/applications")
+    @POST("api/custom/applications")
     suspend fun createApplication(@Body request: ApplicationCreate): Application
 
-    @PATCH("api/data/applications")
-    suspend fun updateApplication(@Query("id") idFilter: String, @Body patch: Map<String, Any?>): List<Application>
+    @PATCH("api/custom/applications/{application_id}")
+    suspend fun updateApplication(
+        @Path("application_id") applicationId: String,
+        @Body patch: Map<String, Any?>
+    ): Application
 
-    @GET("api/data/chats")
-    suspend fun getChats(@Query("application_id") applicationIdFilter: String? = null): List<Chat>
+    // ─── Chats ──────────────────────────────────────────────────
+    @GET("api/custom/chats")
+    suspend fun getChats(@Query("application_id") applicationId: String? = null): List<Chat>
 
-    @GET("api/data/messages")
+    // ─── Messages ───────────────────────────────────────────────
+    @GET("api/custom/messages")
     suspend fun getMessages(
-        @Query("chat_id") chatIdFilter: String,
-        @Query("order") order: String = "created_at.asc"
+        @Query("chat_id") chatId: String,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
     ): List<Message>
 
-    @POST("api/data/messages")
+    @POST("api/custom/messages")
     suspend fun sendMessage(@Body request: MessageCreate): Message
 
-    @GET("api/data/student_results")
-    suspend fun getStudentResults(@Query("student_id") studentIdFilter: String? = null): List<StudentResult>
+    // ─── Student Results ────────────────────────────────────────
+    @GET("api/custom/student_results")
+    suspend fun getStudentResults(
+        @Query("student_id") studentId: String? = null,
+        @Query("tutor_id") tutorId: String? = null
+    ): List<StudentResult>
 
-    @POST("api/data/student_results")
+    @POST("api/custom/student_results")
     suspend fun createStudentResult(@Body request: StudentResultCreate): StudentResult
 
-    @GET("api/data/test_library")
-    suspend fun getTestLibrary(): List<TestLibrary>
+    // ─── Test Library ───────────────────────────────────────────
+    @GET("api/custom/test_library")
+    suspend fun getTestLibrary(@Query("subject_id") subjectId: String? = null): List<TestLibrary>
 
-    @GET("api/data/reviews")
-    suspend fun getReviews(@Query("tutor_id") tutorIdFilter: String? = null): List<Review>
+    // ─── Reviews ────────────────────────────────────────────────
+    @GET("api/custom/reviews")
+    suspend fun getReviews(
+        @Query("tutor_id") tutorId: String? = null,
+        @Query("student_id") studentId: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): List<Review>
 
-    @POST("api/data/reviews")
+    @POST("api/custom/reviews")
     suspend fun createReview(@Body request: ReviewCreate): Review
+
+    // ─── Subjects ────────────────────────────────────────────────
+    @GET("api/custom/subjects")
+    suspend fun getSubjects(
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): List<Subject>
+
+    // ─── Tags ────────────────────────────────────────────────────
+    @GET("api/custom/tags")
+    suspend fun getTags(
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): List<Tag>
+
+    // ─── Tutor Tags ────────────────────────────────────────────
+    @GET("api/custom/tutor_tags")
+    suspend fun getTutorTags(
+        @Query("tutor_id") tutorId: String? = null
+    ): List<TutorTag>
 }

@@ -3,8 +3,9 @@ package com.tutorplatform.app.ui.tutor
 import android.os.Bundle
 import android.view.View
 import android.content.Intent
+import android.app.TimePickerDialog
 import android.widget.Button
-import android.widget.EditText
+import com.google.android.material.button.MaterialButton
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +18,7 @@ import com.tutorplatform.app.model.ScheduleSlotCreate
 import com.tutorplatform.app.model.SimpleItem
 import com.tutorplatform.app.network.ApiClient
 import com.tutorplatform.app.ui.LessonDetailActivity
-import com.tutorplatform.app.util.ApiFilters
+import com.tutorplatform.app.util.DateUtils
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +30,10 @@ class TutorScheduleFragment : Fragment(R.layout.fragment_tutor_schedule) {
     private lateinit var lessonsAdapter: SimpleItemAdapter
     private lateinit var progress: ProgressBar
     private lateinit var lessonsProgress: ProgressBar
+    private val dayNames = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+    private var selectedDay: Int? = null
+    private var selectedStart: String? = null
+    private var selectedEnd: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,20 +54,68 @@ class TutorScheduleFragment : Fragment(R.layout.fragment_tutor_schedule) {
         }
         lessonsList.adapter = lessonsAdapter
 
-        val dayInput = view.findViewById<EditText>(R.id.schedule_day)
-        val startInput = view.findViewById<EditText>(R.id.schedule_start)
-        val endInput = view.findViewById<EditText>(R.id.schedule_end)
+        val dayToggle = view.findViewById<com.google.android.material.button.MaterialButtonToggleGroup>(R.id.schedule_day_toggle)
+        val startBtn = view.findViewById<MaterialButton>(R.id.schedule_start_btn)
+        val endBtn = view.findViewById<MaterialButton>(R.id.schedule_end_btn)
+
+        dayToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                selectedDay = when (checkedId) {
+                    R.id.schedule_day_mon -> 1
+                    R.id.schedule_day_tue -> 2
+                    R.id.schedule_day_wed -> 3
+                    R.id.schedule_day_thu -> 4
+                    R.id.schedule_day_fri -> 5
+                    R.id.schedule_day_sat -> 6
+                    R.id.schedule_day_sun -> 7
+                    else -> null
+                }
+            } else if (dayToggle.checkedButtonId == View.NO_ID) {
+                selectedDay = null
+            }
+        }
+
+        startBtn.setOnClickListener {
+            val now = java.util.Calendar.getInstance()
+            TimePickerDialog(
+                requireContext(),
+                { _, hour, minute ->
+                    val time = "%02d:%02d".format(hour, minute)
+                    selectedStart = time
+                    startBtn.text = time
+                },
+                now.get(java.util.Calendar.HOUR_OF_DAY),
+                now.get(java.util.Calendar.MINUTE),
+                true
+            ).show()
+        }
+
+        endBtn.setOnClickListener {
+            val now = java.util.Calendar.getInstance()
+            TimePickerDialog(
+                requireContext(),
+                { _, hour, minute ->
+                    val time = "%02d:%02d".format(hour, minute)
+                    selectedEnd = time
+                    endBtn.text = time
+                },
+                now.get(java.util.Calendar.HOUR_OF_DAY),
+                now.get(java.util.Calendar.MINUTE),
+                true
+            ).show()
+        }
+
         view.findViewById<Button>(R.id.schedule_add).setOnClickListener {
             val tutorId = SessionManager(requireContext()).getUserId()
             if (tutorId.isNullOrBlank()) {
                 requireContext().toast("Не найден идентификатор репетитора")
                 return@setOnClickListener
             }
-            val day = dayInput.text.toString().toIntOrNull()
-            val start = startInput.text.toString().trim()
-            val end = endInput.text.toString().trim()
-            if (day == null || start.isBlank() || end.isBlank()) {
-                requireContext().toast("Заполните все поля")
+            val day = selectedDay
+            val start = selectedStart
+            val end = selectedEnd
+            if (day == null || start.isNullOrBlank() || end.isNullOrBlank()) {
+                requireContext().toast("Выберите день и время")
                 return@setOnClickListener
             }
             addSlot(tutorId, day, start, end)
@@ -89,12 +142,12 @@ class TutorScheduleFragment : Fragment(R.layout.fragment_tutor_schedule) {
             try {
                 val slots = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext())
-                        .getSchedules(ApiFilters.eq(tutorId))
+                        .getSchedules(tutorId)
                 }
                 val items = slots.map { slot ->
                     SimpleItem(
                         id = slot.id.toString(),
-                        title = "День ${slot.day_of_week}",
+                        title = dayNames.getOrElse(slot.day_of_week?.minus(1) ?: -1) { "День ${slot.day_of_week}" },
                         subtitle = "${slot.start_time} - ${slot.end_time}"
                     )
                 }
@@ -108,17 +161,18 @@ class TutorScheduleFragment : Fragment(R.layout.fragment_tutor_schedule) {
     }
 
     private fun loadLessons() {
+        val tutorId = SessionManager(requireContext()).getUserId()
         lessonsProgress.show(true)
         lifecycleScope.launch {
             try {
                 val lessons = withContext(Dispatchers.IO) {
-                    ApiClient.dataService(requireContext()).getLessons()
+                    ApiClient.dataService(requireContext()).getLessons(tutorId = tutorId)
                 }
                 val items = lessons.filter { it.status == "planned" }.map { lesson ->
                     SimpleItem(
                         id = lesson.id,
-                        title = "Урок ${lesson.id.take(8)}",
-                        subtitle = "${lesson.start_datetime} • ${mapStatus(lesson.status)}"
+                        title = "Урок ${DateUtils.formatDateTime(lesson.start_datetime)}",
+                        subtitle = "${DateUtils.formatDateTime(lesson.start_datetime)} • ${mapStatus(lesson.status)}"
                     )
                 }
                 lessonsAdapter.submitList(items)

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tutorplatform.app.R
+import com.tutorplatform.app.SessionManager
 import com.tutorplatform.app.adapters.SimpleItemAdapter
 import com.tutorplatform.app.model.SimpleItem
 import com.tutorplatform.app.network.ApiClient
@@ -46,12 +47,39 @@ class StudentChatsFragment : Fragment(R.layout.fragment_student_chats) {
                 val chats = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext()).getChats()
                 }
-                val items = chats.map {
-                    SimpleItem(
-                        id = it.id,
-                        title = "Чат ${it.id.take(8)}",
-                        subtitle = "Заявка ${it.application_id.take(8)}"
-                    )
+                val myUserId = SessionManager(requireContext()).getUserId() ?: ""
+                val items = mutableListOf<SimpleItem>()
+                for (chat in chats) {
+                    try {
+                        val apps = withContext(Dispatchers.IO) {
+                            ApiClient.dataService(requireContext()).getApplications()
+                        }
+                        val app = apps.find { it.id == chat.application_id }
+                        if (app != null) {
+                            val otherUserId = if (app.student_id == myUserId) app.tutor_id else app.student_id
+                            val name: String
+                            if (app.student_id == myUserId) {
+                                val profile = withContext(Dispatchers.IO) {
+                                    ApiClient.dataService(requireContext()).getTutorProfile(otherUserId)
+                                }
+                                name = profile.full_name
+                            } else {
+                                val profile = withContext(Dispatchers.IO) {
+                                    ApiClient.dataService(requireContext()).getStudentProfile(otherUserId)
+                                }
+                                name = profile.full_name ?: otherUserId
+                            }
+                            items.add(SimpleItem(
+                                id = chat.id,
+                                title = name,
+                                subtitle = "Статус: ${app.status}"
+                            ))
+                        } else {
+                            items.add(SimpleItem(id = chat.id, title = "Чат", subtitle = chat.id.take(8)))
+                        }
+                    } catch (_: Exception) {
+                        items.add(SimpleItem(id = chat.id, title = "Чат", subtitle = chat.id.take(8)))
+                    }
                 }
                 adapter.submitList(items)
             } catch (ex: Exception) {

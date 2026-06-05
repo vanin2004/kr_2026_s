@@ -4,13 +4,13 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -18,26 +18,27 @@ import java.lang.String;
 
 public final class ItemApplicationBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final MaterialCardView rootView;
 
   @NonNull
-  public final Button applicationAccept;
+  public final MaterialButton applicationAccept;
 
   @NonNull
-  public final Button applicationReject;
+  public final MaterialButton applicationReject;
 
   @NonNull
-  public final TextView applicationStatus;
+  public final MaterialTextView applicationStatus;
 
   @NonNull
-  public final TextView applicationSubtitle;
+  public final MaterialTextView applicationSubtitle;
 
   @NonNull
-  public final TextView applicationTitle;
+  public final MaterialTextView applicationTitle;
 
-  private ItemApplicationBinding(@NonNull LinearLayout rootView, @NonNull Button applicationAccept,
-      @NonNull Button applicationReject, @NonNull TextView applicationStatus,
-      @NonNull TextView applicationSubtitle, @NonNull TextView applicationTitle) {
+  private ItemApplicationBinding(@NonNull MaterialCardView rootView,
+      @NonNull MaterialButton applicationAccept, @NonNull MaterialButton applicationReject,
+      @NonNull MaterialTextView applicationStatus, @NonNull MaterialTextView applicationSubtitle,
+      @NonNull MaterialTextView applicationTitle) {
     this.rootView = rootView;
     this.applicationAccept = applicationAccept;
     this.applicationReject = applicationReject;
@@ -48,7 +49,7 @@ public final class ItemApplicationBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public MaterialCardView getRoot() {
     return rootView;
   }
 
@@ -74,36 +75,36 @@ public final class ItemApplicationBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.application_accept;
-      Button applicationAccept = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton applicationAccept = ViewBindings.findChildViewById(rootView, id);
       if (applicationAccept == null) {
         break missingId;
       }
 
       id = R.id.application_reject;
-      Button applicationReject = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton applicationReject = ViewBindings.findChildViewById(rootView, id);
       if (applicationReject == null) {
         break missingId;
       }
 
       id = R.id.application_status;
-      TextView applicationStatus = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView applicationStatus = ViewBindings.findChildViewById(rootView, id);
       if (applicationStatus == null) {
         break missingId;
       }
 
       id = R.id.application_subtitle;
-      TextView applicationSubtitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView applicationSubtitle = ViewBindings.findChildViewById(rootView, id);
       if (applicationSubtitle == null) {
         break missingId;
       }
 
       id = R.id.application_title;
-      TextView applicationTitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView applicationTitle = ViewBindings.findChildViewById(rootView, id);
       if (applicationTitle == null) {
         break missingId;
       }
 
-      return new ItemApplicationBinding((LinearLayout) rootView, applicationAccept,
+      return new ItemApplicationBinding((MaterialCardView) rootView, applicationAccept,
           applicationReject, applicationStatus, applicationSubtitle, applicationTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);

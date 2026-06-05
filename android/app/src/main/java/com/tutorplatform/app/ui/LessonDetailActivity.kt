@@ -1,7 +1,11 @@
 package com.tutorplatform.app.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -14,7 +18,7 @@ import com.tutorplatform.app.model.Lesson
 import com.tutorplatform.app.model.ReviewCreate
 import com.tutorplatform.app.UserRole
 import com.tutorplatform.app.network.ApiClient
-import com.tutorplatform.app.util.ApiFilters
+import com.tutorplatform.app.util.DateUtils
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -29,13 +33,14 @@ class LessonDetailActivity : AppCompatActivity() {
     private lateinit var linkInput: EditText
     private lateinit var progress: ProgressBar
     private lateinit var reviewBlock: View
-    private lateinit var reviewScore: EditText
+    private lateinit var reviewScore: AutoCompleteTextView
     private lateinit var reviewText: EditText
     private lateinit var reviewButton: Button
     private var currentLesson: Lesson? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= 35) { enableEdgeToEdge() }
         setContentView(R.layout.activity_lesson_detail)
 
         lessonId = intent.getStringExtra(EXTRA_LESSON_ID).orEmpty()
@@ -54,6 +59,10 @@ class LessonDetailActivity : AppCompatActivity() {
         reviewScore = findViewById(R.id.lesson_review_score)
         reviewText = findViewById(R.id.lesson_review_text)
         reviewButton = findViewById(R.id.lesson_review_send)
+
+        val scoreOptions = arrayOf("1", "2", "3", "4", "5")
+        val scoreAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, scoreOptions)
+        reviewScore.setAdapter(scoreAdapter)
 
         findViewById<Button>(R.id.lesson_save_link).setOnClickListener {
             updateLesson(mapOf("meeting_link" to linkInput.text.toString().trim()))
@@ -77,12 +86,11 @@ class LessonDetailActivity : AppCompatActivity() {
         progress.show(true)
         lifecycleScope.launch {
             try {
-                val lessons = withContext(Dispatchers.IO) {
+                val lesson = withContext(Dispatchers.IO) {
                     ApiClient.dataService(this@LessonDetailActivity)
-                        .getLessons(ApiFilters.eq(lessonId))
+                        .getLesson(lessonId)
                 }
-                val lesson = lessons.firstOrNull()
-                if (lesson != null) bindLesson(lesson)
+                bindLesson(lesson)
             } catch (ex: Exception) {
                 toast("Не удалось загрузить урок: ${ex.message}")
             } finally {
@@ -93,8 +101,8 @@ class LessonDetailActivity : AppCompatActivity() {
 
     private fun bindLesson(lesson: Lesson) {
         currentLesson = lesson
-        titleView.text = "Урок ${lesson.id.take(8)}"
-        timeView.text = "Время: ${lesson.start_datetime} - ${lesson.end_datetime}"
+        titleView.text = "Урок ${DateUtils.formatDateTime(lesson.start_datetime)}"
+        timeView.text = "Время: ${DateUtils.formatDateTime(lesson.start_datetime)} - ${DateUtils.formatDateTime(lesson.end_datetime)}"
         statusView.text = "Статус: ${mapStatus(lesson.status)}"
         linkInput.setText(lesson.meeting_link ?: "")
         val role = SessionManager(this).getRole()
@@ -111,7 +119,7 @@ class LessonDetailActivity : AppCompatActivity() {
             try {
                 withContext(Dispatchers.IO) {
                     ApiClient.dataService(this@LessonDetailActivity)
-                        .updateLesson(ApiFilters.eq(lessonId), patch)
+                        .updateLesson(lessonId, patch)
                 }
                 loadLesson()
             } catch (ex: Exception) {

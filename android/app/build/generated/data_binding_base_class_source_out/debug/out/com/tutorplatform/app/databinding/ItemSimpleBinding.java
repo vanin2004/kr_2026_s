@@ -4,12 +4,12 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -17,19 +17,19 @@ import java.lang.String;
 
 public final class ItemSimpleBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final MaterialCardView rootView;
 
   @NonNull
-  public final TextView itemMeta;
+  public final MaterialTextView itemMeta;
 
   @NonNull
-  public final TextView itemSubtitle;
+  public final MaterialTextView itemSubtitle;
 
   @NonNull
-  public final TextView itemTitle;
+  public final MaterialTextView itemTitle;
 
-  private ItemSimpleBinding(@NonNull LinearLayout rootView, @NonNull TextView itemMeta,
-      @NonNull TextView itemSubtitle, @NonNull TextView itemTitle) {
+  private ItemSimpleBinding(@NonNull MaterialCardView rootView, @NonNull MaterialTextView itemMeta,
+      @NonNull MaterialTextView itemSubtitle, @NonNull MaterialTextView itemTitle) {
     this.rootView = rootView;
     this.itemMeta = itemMeta;
     this.itemSubtitle = itemSubtitle;
@@ -38,7 +38,7 @@ public final class ItemSimpleBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public MaterialCardView getRoot() {
     return rootView;
   }
 
@@ -64,24 +64,24 @@ public final class ItemSimpleBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.item_meta;
-      TextView itemMeta = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView itemMeta = ViewBindings.findChildViewById(rootView, id);
       if (itemMeta == null) {
         break missingId;
       }
 
       id = R.id.item_subtitle;
-      TextView itemSubtitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView itemSubtitle = ViewBindings.findChildViewById(rootView, id);
       if (itemSubtitle == null) {
         break missingId;
       }
 
       id = R.id.item_title;
-      TextView itemTitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView itemTitle = ViewBindings.findChildViewById(rootView, id);
       if (itemTitle == null) {
         break missingId;
       }
 
-      return new ItemSimpleBinding((LinearLayout) rootView, itemMeta, itemSubtitle, itemTitle);
+      return new ItemSimpleBinding((MaterialCardView) rootView, itemMeta, itemSubtitle, itemTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

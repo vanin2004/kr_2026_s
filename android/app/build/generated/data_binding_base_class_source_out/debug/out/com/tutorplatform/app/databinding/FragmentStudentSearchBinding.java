@@ -4,17 +4,20 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -25,13 +28,13 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final Button searchButton;
+  public final MaterialButton searchButton;
 
   @NonNull
-  public final EditText searchMaxRate;
+  public final TextInputEditText searchMaxRate;
 
   @NonNull
-  public final EditText searchMinExp;
+  public final TextInputEditText searchMinExp;
 
   @NonNull
   public final ProgressBar searchProgress;
@@ -40,68 +43,80 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
   public final RecyclerView searchResults;
 
   @NonNull
-  public final EditText searchSubject;
+  public final AppCompatAutoCompleteTextView searchSubject;
 
   @NonNull
-  public final EditText searchTags;
+  public final AppCompatAutoCompleteTextView searchTags;
+
+  @NonNull
+  public final TextInputLayout subjectLayout;
+
+  @NonNull
+  public final ChipGroup tagChipGroup;
+
+  @NonNull
+  public final TextInputLayout tagInputLayout;
 
   @NonNull
   public final SeekBar weightCommunication;
 
   @NonNull
-  public final TextView weightCommunicationLabel;
+  public final MaterialTextView weightCommunicationLabel;
 
   @NonNull
-  public final TextView weightCommunicationValue;
+  public final MaterialTextView weightCommunicationValue;
 
   @NonNull
   public final SeekBar weightEfficiency;
 
   @NonNull
-  public final TextView weightEfficiencyLabel;
+  public final MaterialTextView weightEfficiencyLabel;
 
   @NonNull
-  public final TextView weightEfficiencyValue;
+  public final MaterialTextView weightEfficiencyValue;
 
   @NonNull
   public final SeekBar weightExpertise;
 
   @NonNull
-  public final TextView weightExpertiseLabel;
+  public final MaterialTextView weightExpertiseLabel;
 
   @NonNull
-  public final TextView weightExpertiseValue;
+  public final MaterialTextView weightExpertiseValue;
 
   @NonNull
   public final SeekBar weightResponsiveness;
 
   @NonNull
-  public final TextView weightResponsivenessLabel;
+  public final MaterialTextView weightResponsivenessLabel;
 
   @NonNull
-  public final TextView weightResponsivenessValue;
+  public final MaterialTextView weightResponsivenessValue;
 
   @NonNull
   public final SeekBar weightTags;
 
   @NonNull
-  public final TextView weightTagsLabel;
+  public final MaterialTextView weightTagsLabel;
 
   @NonNull
-  public final TextView weightTagsValue;
+  public final MaterialTextView weightTagsValue;
 
-  private FragmentStudentSearchBinding(@NonNull ScrollView rootView, @NonNull Button searchButton,
-      @NonNull EditText searchMaxRate, @NonNull EditText searchMinExp,
-      @NonNull ProgressBar searchProgress, @NonNull RecyclerView searchResults,
-      @NonNull EditText searchSubject, @NonNull EditText searchTags,
-      @NonNull SeekBar weightCommunication, @NonNull TextView weightCommunicationLabel,
-      @NonNull TextView weightCommunicationValue, @NonNull SeekBar weightEfficiency,
-      @NonNull TextView weightEfficiencyLabel, @NonNull TextView weightEfficiencyValue,
-      @NonNull SeekBar weightExpertise, @NonNull TextView weightExpertiseLabel,
-      @NonNull TextView weightExpertiseValue, @NonNull SeekBar weightResponsiveness,
-      @NonNull TextView weightResponsivenessLabel, @NonNull TextView weightResponsivenessValue,
-      @NonNull SeekBar weightTags, @NonNull TextView weightTagsLabel,
-      @NonNull TextView weightTagsValue) {
+  private FragmentStudentSearchBinding(@NonNull ScrollView rootView,
+      @NonNull MaterialButton searchButton, @NonNull TextInputEditText searchMaxRate,
+      @NonNull TextInputEditText searchMinExp, @NonNull ProgressBar searchProgress,
+      @NonNull RecyclerView searchResults, @NonNull AppCompatAutoCompleteTextView searchSubject,
+      @NonNull AppCompatAutoCompleteTextView searchTags, @NonNull TextInputLayout subjectLayout,
+      @NonNull ChipGroup tagChipGroup, @NonNull TextInputLayout tagInputLayout,
+      @NonNull SeekBar weightCommunication, @NonNull MaterialTextView weightCommunicationLabel,
+      @NonNull MaterialTextView weightCommunicationValue, @NonNull SeekBar weightEfficiency,
+      @NonNull MaterialTextView weightEfficiencyLabel,
+      @NonNull MaterialTextView weightEfficiencyValue, @NonNull SeekBar weightExpertise,
+      @NonNull MaterialTextView weightExpertiseLabel,
+      @NonNull MaterialTextView weightExpertiseValue, @NonNull SeekBar weightResponsiveness,
+      @NonNull MaterialTextView weightResponsivenessLabel,
+      @NonNull MaterialTextView weightResponsivenessValue, @NonNull SeekBar weightTags,
+      @NonNull MaterialTextView weightTagsLabel, @NonNull MaterialTextView weightTagsValue) {
     this.rootView = rootView;
     this.searchButton = searchButton;
     this.searchMaxRate = searchMaxRate;
@@ -110,6 +125,9 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
     this.searchResults = searchResults;
     this.searchSubject = searchSubject;
     this.searchTags = searchTags;
+    this.subjectLayout = subjectLayout;
+    this.tagChipGroup = tagChipGroup;
+    this.tagInputLayout = tagInputLayout;
     this.weightCommunication = weightCommunication;
     this.weightCommunicationLabel = weightCommunicationLabel;
     this.weightCommunicationValue = weightCommunicationValue;
@@ -155,19 +173,19 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.search_button;
-      Button searchButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton searchButton = ViewBindings.findChildViewById(rootView, id);
       if (searchButton == null) {
         break missingId;
       }
 
       id = R.id.search_max_rate;
-      EditText searchMaxRate = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText searchMaxRate = ViewBindings.findChildViewById(rootView, id);
       if (searchMaxRate == null) {
         break missingId;
       }
 
       id = R.id.search_min_exp;
-      EditText searchMinExp = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText searchMinExp = ViewBindings.findChildViewById(rootView, id);
       if (searchMinExp == null) {
         break missingId;
       }
@@ -185,14 +203,32 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
       }
 
       id = R.id.search_subject;
-      EditText searchSubject = ViewBindings.findChildViewById(rootView, id);
+      AppCompatAutoCompleteTextView searchSubject = ViewBindings.findChildViewById(rootView, id);
       if (searchSubject == null) {
         break missingId;
       }
 
       id = R.id.search_tags;
-      EditText searchTags = ViewBindings.findChildViewById(rootView, id);
+      AppCompatAutoCompleteTextView searchTags = ViewBindings.findChildViewById(rootView, id);
       if (searchTags == null) {
+        break missingId;
+      }
+
+      id = R.id.subject_layout;
+      TextInputLayout subjectLayout = ViewBindings.findChildViewById(rootView, id);
+      if (subjectLayout == null) {
+        break missingId;
+      }
+
+      id = R.id.tag_chip_group;
+      ChipGroup tagChipGroup = ViewBindings.findChildViewById(rootView, id);
+      if (tagChipGroup == null) {
+        break missingId;
+      }
+
+      id = R.id.tag_input_layout;
+      TextInputLayout tagInputLayout = ViewBindings.findChildViewById(rootView, id);
+      if (tagInputLayout == null) {
         break missingId;
       }
 
@@ -203,13 +239,13 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
       }
 
       id = R.id.weight_communication_label;
-      TextView weightCommunicationLabel = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightCommunicationLabel = ViewBindings.findChildViewById(rootView, id);
       if (weightCommunicationLabel == null) {
         break missingId;
       }
 
       id = R.id.weight_communication_value;
-      TextView weightCommunicationValue = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightCommunicationValue = ViewBindings.findChildViewById(rootView, id);
       if (weightCommunicationValue == null) {
         break missingId;
       }
@@ -221,13 +257,13 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
       }
 
       id = R.id.weight_efficiency_label;
-      TextView weightEfficiencyLabel = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightEfficiencyLabel = ViewBindings.findChildViewById(rootView, id);
       if (weightEfficiencyLabel == null) {
         break missingId;
       }
 
       id = R.id.weight_efficiency_value;
-      TextView weightEfficiencyValue = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightEfficiencyValue = ViewBindings.findChildViewById(rootView, id);
       if (weightEfficiencyValue == null) {
         break missingId;
       }
@@ -239,13 +275,13 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
       }
 
       id = R.id.weight_expertise_label;
-      TextView weightExpertiseLabel = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightExpertiseLabel = ViewBindings.findChildViewById(rootView, id);
       if (weightExpertiseLabel == null) {
         break missingId;
       }
 
       id = R.id.weight_expertise_value;
-      TextView weightExpertiseValue = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightExpertiseValue = ViewBindings.findChildViewById(rootView, id);
       if (weightExpertiseValue == null) {
         break missingId;
       }
@@ -257,13 +293,13 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
       }
 
       id = R.id.weight_responsiveness_label;
-      TextView weightResponsivenessLabel = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightResponsivenessLabel = ViewBindings.findChildViewById(rootView, id);
       if (weightResponsivenessLabel == null) {
         break missingId;
       }
 
       id = R.id.weight_responsiveness_value;
-      TextView weightResponsivenessValue = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightResponsivenessValue = ViewBindings.findChildViewById(rootView, id);
       if (weightResponsivenessValue == null) {
         break missingId;
       }
@@ -275,23 +311,24 @@ public final class FragmentStudentSearchBinding implements ViewBinding {
       }
 
       id = R.id.weight_tags_label;
-      TextView weightTagsLabel = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightTagsLabel = ViewBindings.findChildViewById(rootView, id);
       if (weightTagsLabel == null) {
         break missingId;
       }
 
       id = R.id.weight_tags_value;
-      TextView weightTagsValue = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView weightTagsValue = ViewBindings.findChildViewById(rootView, id);
       if (weightTagsValue == null) {
         break missingId;
       }
 
       return new FragmentStudentSearchBinding((ScrollView) rootView, searchButton, searchMaxRate,
-          searchMinExp, searchProgress, searchResults, searchSubject, searchTags,
-          weightCommunication, weightCommunicationLabel, weightCommunicationValue, weightEfficiency,
-          weightEfficiencyLabel, weightEfficiencyValue, weightExpertise, weightExpertiseLabel,
-          weightExpertiseValue, weightResponsiveness, weightResponsivenessLabel,
-          weightResponsivenessValue, weightTags, weightTagsLabel, weightTagsValue);
+          searchMinExp, searchProgress, searchResults, searchSubject, searchTags, subjectLayout,
+          tagChipGroup, tagInputLayout, weightCommunication, weightCommunicationLabel,
+          weightCommunicationValue, weightEfficiency, weightEfficiencyLabel, weightEfficiencyValue,
+          weightExpertise, weightExpertiseLabel, weightExpertiseValue, weightResponsiveness,
+          weightResponsivenessLabel, weightResponsivenessValue, weightTags, weightTagsLabel,
+          weightTagsValue);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

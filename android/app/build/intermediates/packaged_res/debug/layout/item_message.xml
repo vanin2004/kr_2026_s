@@ -1,27 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_sm"
-    android:background="@drawable/bg_card"
-    android:orientation="vertical"
-    android:padding="@dimen/spacing_md">
+    android:paddingVertical="2dp">
 
-    <TextView
-        android:id="@+id/message_text"
-        android:layout_width="match_parent"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/message_bubble"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Сообщение"
-        android:textColor="@color/text_primary" />
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        app:cardCornerRadius="16dp"
+        app:strokeWidth="0dp"
+        app:contentPaddingStart="12dp"
+        app:contentPaddingEnd="12dp"
+        app:contentPaddingTop="8dp"
+        app:contentPaddingBottom="6dp">
 
-    <TextView
-        android:id="@+id/message_meta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xs"
-        android:text="отправитель • время"
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Сообщение"
+                android:textSize="15sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/message_meta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="время"
+                android:textSize="11sp"
+                android:alpha="0.7" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

@@ -12,7 +12,6 @@ import com.tutorplatform.app.R
 import com.tutorplatform.app.SessionManager
 import com.tutorplatform.app.network.ApiClient
 import com.tutorplatform.app.ui.LoginActivity
-import com.tutorplatform.app.util.ApiFilters
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +25,7 @@ class TutorProfileFragment : Fragment(R.layout.fragment_tutor_profile) {
     private lateinit var rateInput: EditText
     private lateinit var expInput: EditText
     private lateinit var progress: ProgressBar
+    private var subjectNameMap: Map<String, String> = emptyMap()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,7 +40,13 @@ class TutorProfileFragment : Fragment(R.layout.fragment_tutor_profile) {
         view.findViewById<Button>(R.id.tutor_profile_save).setOnClickListener { saveProfile() }
         view.findViewById<Button>(R.id.tutor_profile_logout).setOnClickListener { logout() }
 
-        loadProfile()
+        lifecycleScope.launch {
+            val subjects = withContext(Dispatchers.IO) {
+                ApiClient.dataService(requireContext()).getSubjects(limit = 100)
+            }
+            subjectNameMap = subjects.associate { it.id to it.name }
+            loadProfile()
+        }
     }
 
     private fun loadProfile() {
@@ -53,18 +59,15 @@ class TutorProfileFragment : Fragment(R.layout.fragment_tutor_profile) {
         progress.show(true)
         lifecycleScope.launch {
             try {
-                val profiles = withContext(Dispatchers.IO) {
+                val profile = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext())
-                        .getTutorProfiles(ApiFilters.eq(tutorId))
+                        .getTutorProfile(tutorId)
                 }
-                val profile = profiles.firstOrNull()
-                if (profile != null) {
-                    nameInput.setText(profile.full_name)
-                    subjectInput.setText(profile.specialization ?: "")
-                    educationInput.setText(profile.education ?: "")
-                    rateInput.setText(profile.hourly_rate?.toString() ?: "")
-                    expInput.setText(profile.experience_years?.toString() ?: "")
-                }
+                nameInput.setText(profile.full_name)
+                subjectInput.setText(subjectNameMap[profile.subject_id] ?: profile.subject_id ?: "")
+                educationInput.setText(profile.education ?: "")
+                rateInput.setText(profile.hourly_rate?.toString() ?: "")
+                expInput.setText(profile.experience_years?.toString() ?: "")
             } catch (ex: Exception) {
                 requireContext().toast("Не удалось загрузить профиль: ${ex.message}")
             } finally {
@@ -82,7 +85,7 @@ class TutorProfileFragment : Fragment(R.layout.fragment_tutor_profile) {
 
         val patch = mapOf(
             "full_name" to nameInput.text.toString().trim(),
-            "specialization" to subjectInput.text.toString().trim(),
+            "subject_id" to subjectInput.text.toString().trim().ifBlank { null },
             "education" to educationInput.text.toString().trim(),
             "hourly_rate" to rateInput.text.toString().trim().toIntOrNull(),
             "experience_years" to expInput.text.toString().trim().toIntOrNull()
@@ -93,7 +96,7 @@ class TutorProfileFragment : Fragment(R.layout.fragment_tutor_profile) {
             try {
                 withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext())
-                        .updateTutorProfile(ApiFilters.eq(tutorId), patch)
+                        .updateTutorProfile(tutorId, patch)
                 }
                 requireContext().toast("Профиль сохранен")
             } catch (ex: Exception) {

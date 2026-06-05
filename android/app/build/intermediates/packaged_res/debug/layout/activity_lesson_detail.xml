@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_light">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,112 +12,122 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_lg">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lesson_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Детали урока"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lesson_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
-            android:text="Время: -"
-            android:textColor="@color/text_secondary" />
+            android:text="Время: -" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lesson_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
-            android:text="Статус: -"
-            android:textColor="@color/text_secondary" />
+            android:text="Статус: -" />
 
-        <EditText
-            android:id="@+id/lesson_link"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
-            android:background="@drawable/bg_input"
-            android:hint="Ссылка на встречу"
-            android:padding="@dimen/spacing_sm" />
+            app:boxBackgroundMode="outline">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/lesson_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ссылка на встречу" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/lesson_save_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
-            android:background="@drawable/bg_button_primary"
-            android:text="Сохранить ссылку"
-            android:textColor="@color/white" />
+            android:text="Сохранить ссылку" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/lesson_mark_done"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
-            android:background="@drawable/bg_button_outline"
-            android:text="Отметить как проведенный"
-            android:textColor="@color/brand_primary" />
+            android:text="Отметить как проведенный" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/lesson_cancel"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
-            android:background="@drawable/bg_button_outline"
-            android:text="Отменить урок"
-            android:textColor="@color/brand_primary" />
+            android:text="Отменить урок" />
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/lesson_review_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_lg"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_md">
+            android:layout_marginTop="@dimen/spacing_lg">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Оценка и отзыв"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary" />
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
 
-            <EditText
-                android:id="@+id/lesson_review_score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:background="@drawable/bg_input"
-                android:hint="Оценка (1-5)"
-                android:inputType="number"
-                android:padding="@dimen/spacing_sm" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Оценка и отзыв"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-            <EditText
-                android:id="@+id/lesson_review_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:background="@drawable/bg_input"
-                android:hint="Комментарий"
-                android:padding="@dimen/spacing_sm" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:boxBackgroundMode="outline"
+                    app:endIconMode="dropdown_menu">
 
-            <Button
-                android:id="@+id/lesson_review_send"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:background="@drawable/bg_button_primary"
-                android:text="Отправить отзыв"
-                android:textColor="@color/white" />
+                    <AutoCompleteTextView
+                        android:id="@+id/lesson_review_score"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Оценка (1-5)"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:clickable="true" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:boxBackgroundMode="outline">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/lesson_review_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Комментарий" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/lesson_review_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="Отправить отзыв" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <ProgressBar
             android:id="@+id/lesson_progress"

@@ -59,3 +59,5 @@ Desktop.ini
 
 # --- Logs ---
 *.log
+
+android/build_gradle.sh

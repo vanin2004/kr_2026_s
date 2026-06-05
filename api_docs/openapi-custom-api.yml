@@ -46,6 +46,44 @@ paths:
                     example: "ok"
 
   # ────────────────────────────────────────────────────────────────
+  # Auth (Регистрация)
+  # ────────────────────────────────────────────────────────────────
+  /api/custom/auth/register:
+    post:
+      operationId: "registerUser"
+      summary: "Регистрация нового пользователя"
+      description: |
+        Создаёт пользователя одновременно в Keycloak (для аутентификации)
+        и в локальной БД (для данных приложения).
+
+        Для репетитора обязательны `subject_id` и `hourly_rate`.
+        Для ученика — только username, password, full_name, role.
+
+        Ответ содержит `user_id` — UUID пользователя в системе.
+      tags: ["auth"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: "Пользователь успешно зарегистрирован"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "400":
+          description: "Неверные данные (несуществующий subject_id)"
+        "409":
+          description: "Username уже занят"
+        "422":
+          description: "Ошибка валидации (не указан subject_id для репетитора и т.п.)"
+        "502":
+          description: "Сервис регистрации недоступен (Keycloak не отвечает)"
+
+  # ────────────────────────────────────────────────────────────────
   # Suggestions (Подбор репетиторов)
   # ────────────────────────────────────────────────────────────────
   /api/custom/suggestions:
@@ -81,14 +119,80 @@ paths:
           description: "Ошибка сервера"
 
   # ────────────────────────────────────────────────────────────────
-  # Internal Webhook — User Created
+  # Internal Webhooks (Keycloak) — только Docker-сеть
   # ────────────────────────────────────────────────────────────────
+  /api/custom/internal:
+    post:
+      operationId: "sendWebhook"
+      summary: "Keycloak Event Listener вебхук"
+      description: |
+        Принимает события от com.vymalo keycloak-webhook-provider.
+        Обрабатывает `REGISTER`, `LOGIN`, `LOGOUT`, `UPDATE_PROFILE` и пр.
+        **Недоступен через Nginx** — только внутренняя Docker-сеть.
+      tags: ["internal"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookRequest"
+      responses:
+        "200":
+          description: "Вебхук обработан"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [created, already_exists, acknowledged, skipped]
+        "400":
+          description: "Некорректная роль"
+        "422":
+          description: "Некорректный UUID"
+        "500":
+          description: "Внутренняя ошибка"
+
+  /api/custom/internal/sendWebhook:
+    post:
+      operationId: "sendWebhookAlt"
+      summary: "Keycloak вебхук (альтернативный путь /sendWebhook)"
+      description: |
+        Алиас для POST /api/custom/internal. Некоторые конфигурации
+        keycloak-webhook-provider отправляют на /sendWebhook.
+        **Недоступен через Nginx** — только внутренняя Docker-сеть.
+      tags: ["internal"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookRequest"
+      responses:
+        "200":
+          description: "Вебхук обработан"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [created, already_exists, acknowledged, skipped]
+        "400":
+          description: "Некорректная роль"
+        "422":
+          description: "Некорректный UUID"
+        "500":
+          description: "Внутренняя ошибка"
+
   /api/custom/internal/user-created:
     post:
       operationId: "internalUserCreated"
-      summary: "Вебхук регистрации пользователя (только internal)"
+      summary: "Вебхук регистрации пользователя (упрощённый)"
       description: |
-        Вызывается Keycloak Event Listener при событии `REGISTER`.
+        Упрощённый эндпоинт, вызываемый Keycloak Event Listener при событии `REGISTER`.
         Создаёт запись в `users` + пустой профиль (`tutor_profiles` или `student_profiles`).
         **Недоступен через Nginx** — только внутренняя Docker-сеть.
       tags: ["internal"]
@@ -99,8 +203,8 @@ paths:
             schema:
               $ref: "#/components/schemas/KeycloakUserCreated"
       responses:
-        "201":
-          description: "Пользователь создан"
+        "200":
+          description: "Пользователь создан или уже существует"
           content:
             application/json:
               schema:
@@ -171,7 +275,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: "Данные предмета"
@@ -190,7 +295,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -215,7 +321,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: "Предмет удалён"
@@ -279,7 +386,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: "Данные тега"
@@ -298,7 +406,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -323,7 +432,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: "Тег удалён"
@@ -419,7 +529,8 @@ paths:
         - name: subject_id
           in: query
           schema:
-            type: integer
+            type: string
+            format: uuid
           description: "Фильтр по предмету"
         - name: hourly_rate_lte
           in: query
@@ -518,8 +629,35 @@ paths:
           description: "Профиль не найден"
 
   # ────────────────────────────────────────────────────────────────
-  # CRUD — Student Profiles (только по user_id, нет списка)
+  # CRUD — Student Profiles
   # ────────────────────────────────────────────────────────────────
+  /api/custom/student_profiles:
+    get:
+      operationId: "listStudentProfiles"
+      summary: "Список профилей учеников"
+      tags: ["student_profiles"]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: "Список профилей учеников"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudentProfileRead"
+
   /api/custom/student_profiles/{user_id}:
     get:
       operationId: "getStudentProfile"
@@ -584,6 +722,22 @@ paths:
                 $ref: "#/components/schemas/StudentProfileRead"
         "404":
           description: "Профиль не найден"
+    delete:
+      operationId: "deleteStudentProfile"
+      summary: "Удалить профиль ученика"
+      tags: ["student_profiles"]
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: "Профиль удалён"
+        "404":
+          description: "Профиль не найден"
 
   # ────────────────────────────────────────────────────────────────
   # CRUD — Tutor Tags
@@ -602,7 +756,8 @@ paths:
         - name: tag_id
           in: query
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: "Список тегов репетиторов"
@@ -644,7 +799,8 @@ paths:
           in: query
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: "Тег удалён"
@@ -706,7 +862,8 @@ paths:
           in: query
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: "Тег удалён"
@@ -753,6 +910,67 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TutorCertificationRead"
+
+  /api/custom/tutor_certifications/{cert_id}:
+    get:
+      operationId: "getTutorCertification"
+      summary: "Получить сертификат репетитора по ID"
+      tags: ["tutor_certifications"]
+      parameters:
+        - name: cert_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Сертификат"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TutorCertificationRead"
+        "404":
+          description: "Сертификат не найден"
+    patch:
+      operationId: "updateTutorCertification"
+      summary: "Обновить сертификат (подтвердить и т.п.)"
+      tags: ["tutor_certifications"]
+      parameters:
+        - name: cert_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TutorCertificationUpdate"
+      responses:
+        "200":
+          description: "Сертификат обновлён"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TutorCertificationRead"
+        "404":
+          description: "Сертификат не найден"
+    delete:
+      operationId: "deleteTutorCertification"
+      summary: "Удалить сертификат репетитора"
+      tags: ["tutor_certifications"]
+      parameters:
+        - name: cert_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: "Сертификат удалён"
+        "404":
+          description: "Сертификат не найден"
 
   # ────────────────────────────────────────────────────────────────
   # CRUD — Schedules
@@ -1134,6 +1352,28 @@ paths:
                 items:
                   $ref: "#/components/schemas/ChatRead"
 
+  /api/custom/chats/{chat_id}:
+    get:
+      operationId: "getChat"
+      summary: "Получить чат по ID"
+      tags: ["chats"]
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Чат"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatRead"
+        "404":
+          description: "Чат не найден"
+
   # ────────────────────────────────────────────────────────────────
   # CRUD — Messages
   # ────────────────────────────────────────────────────────────────
@@ -1212,6 +1452,42 @@ paths:
                 $ref: "#/components/schemas/MessageRead"
         "404":
           description: "Сообщение не найдено"
+    get:
+      operationId: "getMessage"
+      summary: "Получить сообщение по ID"
+      tags: ["messages"]
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Сообщение"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageRead"
+        "404":
+          description: "Сообщение не найдено"
+    delete:
+      operationId: "deleteMessage"
+      summary: "Удалить сообщение"
+      tags: ["messages"]
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: "Сообщение удалено"
+        "404":
+          description: "Сообщение не найдено"
 
   # ────────────────────────────────────────────────────────────────
   # CRUD — Test Library
@@ -1225,7 +1501,8 @@ paths:
         - name: subject_id
           in: query
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: "Список тестов"
@@ -1252,6 +1529,70 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TestLibraryRead"
+
+  /api/custom/test_library/{test_id}:
+    get:
+      operationId: "getTestLibrary"
+      summary: "Получить тест по ID"
+      tags: ["test_library"]
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Тест"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestLibraryRead"
+        "404":
+          description: "Тест не найден"
+    patch:
+      operationId: "updateTestLibrary"
+      summary: "Обновить тест"
+      tags: ["test_library"]
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TestLibraryUpdate"
+      responses:
+        "200":
+          description: "Тест обновлён"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestLibraryRead"
+        "404":
+          description: "Тест не найден"
+    delete:
+      operationId: "deleteTestLibrary"
+      summary: "Удалить тест"
+      tags: ["test_library"]
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: "Тест удалён"
+        "404":
+          description: "Тест не найден"
 
   # ────────────────────────────────────────────────────────────────
   # CRUD — Student Results
@@ -1328,6 +1669,42 @@ paths:
                 $ref: "#/components/schemas/StudentResultRead"
         "404":
           description: "Результат не найден"
+    get:
+      operationId: "getStudentResult"
+      summary: "Получить результат тестирования по ID"
+      tags: ["student_results"]
+      parameters:
+        - name: result_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Результат"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentResultRead"
+        "404":
+          description: "Результат не найден"
+    delete:
+      operationId: "deleteStudentResult"
+      summary: "Удалить результат тестирования"
+      tags: ["student_results"]
+      parameters:
+        - name: result_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: "Результат удалён"
+        "404":
+          description: "Результат не найден"
 
   # ────────────────────────────────────────────────────────────────
   # CRUD — Reviews
@@ -1384,6 +1761,70 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ReviewRead"
+
+  /api/custom/reviews/{review_id}:
+    get:
+      operationId: "getReview"
+      summary: "Получить отзыв по ID"
+      tags: ["reviews"]
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Отзыв"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewRead"
+        "404":
+          description: "Отзыв не найден"
+    patch:
+      operationId: "updateReview"
+      summary: "Обновить отзыв"
+      tags: ["reviews"]
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewUpdate"
+      responses:
+        "200":
+          description: "Отзыв обновлён"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewRead"
+        "404":
+          description: "Отзыв не найден"
+    delete:
+      operationId: "deleteReview"
+      summary: "Удалить отзыв"
+      tags: ["reviews"]
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: "Отзыв удалён"
+        "404":
+          description: "Отзыв не найден"
 
   # ────────────────────────────────────────────────────────────────
   # CRUD — Device Tokens
@@ -1442,9 +1883,72 @@ paths:
           description: "Токен удалён"
         "404":
           description: "Токен не найден"
+    get:
+      operationId: "getDeviceToken"
+      summary: "Получить FCM-токен по ID"
+      tags: ["device_tokens"]
+      parameters:
+        - name: token_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Токен"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceTokenRead"
+        "404":
+          description: "Токен не найден"
 
 components:
   schemas:
+    # ─── Auth (Регистрация) ─────────────────────────────────────
+    RegisterRequest:
+      type: object
+      required: [username, password, full_name, role]
+      properties:
+        username:
+          type: string
+          description: "Логин пользователя"
+          example: "ivan.petrov"
+        password:
+          type: string
+          description: "Пароль"
+          example: "qwerty123"
+        full_name:
+          type: string
+          description: "ФИО"
+          example: "Петров Иван Сергеевич"
+        role:
+          type: string
+          enum: ["tutor", "student"]
+          description: "Тип учётной записи"
+        subject_id:
+          type: string
+          format: uuid
+          description: "ID предмета (обязательно для tutor)"
+        hourly_rate:
+          type: integer
+          description: "Стоимость часа в рублях (обязательно для tutor)"
+          example: 1500
+    RegisterResponse:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: "UUID пользователя в системе"
+        username:
+          type: string
+          description: "Логин"
+        role:
+          type: string
+          enum: ["tutor", "student"]
+          description: "Тип учётной записи"
+
     # ─── Subjects ─────────────────────────────────────────────────
     SubjectCreate:
       type: object
@@ -1460,7 +1964,8 @@ components:
         - type: object
           properties:
             id:
-              type: integer
+              type: string
+              format: uuid
     SubjectUpdate:
       type: object
       properties:
@@ -1483,7 +1988,8 @@ components:
         - type: object
           properties:
             id:
-              type: integer
+              type: string
+              format: uuid
     TagUpdate:
       type: object
       properties:
@@ -1526,7 +2032,8 @@ components:
           type: string
           example: "МГУ, механико-математический факультет"
         subject_id:
-          type: integer
+          type: string
+          format: uuid
         hourly_rate:
           type: integer
           description: "Цена в копейках (RUB)"
@@ -1555,7 +2062,8 @@ components:
           type: string
           nullable: true
         subject_id:
-          type: integer
+          type: string
+          format: uuid
           nullable: true
         hourly_rate:
           type: integer
@@ -1594,7 +2102,8 @@ components:
         education:
           type: string
         subject_id:
-          type: integer
+          type: string
+          format: uuid
         hourly_rate:
           type: integer
         experience_years:
@@ -1669,7 +2178,8 @@ components:
           type: string
           format: uuid
         tag_id:
-          type: integer
+          type: string
+          format: uuid
     TutorTagRead:
       type: object
       properties:
@@ -1677,7 +2187,8 @@ components:
           type: string
           format: uuid
         tag_id:
-          type: integer
+          type: string
+          format: uuid
 
     # ─── Student Preferred Tag ────────────────────────────────────
     StudentPreferredTagCreate:
@@ -1688,7 +2199,8 @@ components:
           type: string
           format: uuid
         tag_id:
-          type: integer
+          type: string
+          format: uuid
         is_required:
           type: boolean
           default: false
@@ -1700,7 +2212,8 @@ components:
           type: string
           format: uuid
         tag_id:
-          type: integer
+          type: string
+          format: uuid
         is_required:
           type: boolean
 
@@ -1737,6 +2250,19 @@ components:
         created_at:
           type: string
           format: date-time
+
+    TutorCertificationUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        file_url:
+          type: string
+          format: uri
+          maxLength: 500
+        is_verified:
+          type: boolean
 
     # ─── Schedule ─────────────────────────────────────────────────
     ScheduleCreate:
@@ -1954,7 +2480,8 @@ components:
       required: [subject_id, topic, questions_json]
       properties:
         subject_id:
-          type: integer
+          type: string
+          format: uuid
         topic:
           type: string
           maxLength: 255
@@ -1965,11 +2492,22 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         subject_id:
-          type: integer
+          type: string
+          format: uuid
         topic:
           type: string
+        questions_json:
+          type: object
+
+    TestLibraryUpdate:
+      type: object
+      properties:
+        topic:
+          type: string
+          maxLength: 255
         questions_json:
           type: object
 
@@ -1985,7 +2523,8 @@ components:
           type: string
           format: uuid
         test_id:
-          type: integer
+          type: string
+          format: uuid
         type:
           type: string
           enum: [initial_test, control_test]
@@ -2002,7 +2541,8 @@ components:
           type: string
           format: uuid
         test_id:
-          type: integer
+          type: string
+          format: uuid
         type:
           type: string
         score:
@@ -2068,6 +2608,16 @@ components:
         created_at:
           type: string
           format: date-time
+
+    ReviewUpdate:
+      type: object
+      properties:
+        communication_score:
+          type: integer
+          minimum: 1
+          maximum: 5
+        text:
+          type: string
 
     # ─── Device Token ─────────────────────────────────────────────
     DeviceTokenCreate:
@@ -2156,7 +2706,8 @@ components:
       required: [subject_id]
       properties:
         subject_id:
-          type: integer
+          type: string
+          format: uuid
           description: "ID предмета"
         max_price:
           type: integer
@@ -2178,7 +2729,8 @@ components:
         required_tag_ids:
           type: array
           items:
-            type: integer
+            type: string
+            format: uuid
           description: "Обязательные теги (используются в O5)"
         weights:
           $ref: "#/components/schemas/SuggestionWeights"
@@ -2222,7 +2774,45 @@ components:
           type: boolean
           description: "Cold-start boost активен"
 
-    # ─── Keycloak Webhook ─────────────────────────────────────────
+    # ─── Keycloak Webhooks ─────────────────────────────────────────
+    WebhookRequest:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: "Тип события (REGISTER, LOGIN, LOGOUT, UPDATE_PROFILE и др.)"
+        realmId:
+          type: string
+          description: "ID realm'а"
+        id:
+          type: string
+          description: "ID события"
+        time:
+          type: number
+          description: "Время события"
+        clientId:
+          type: string
+          description: "ID клиента"
+        userId:
+          type: string
+          description: "UUID пользователя из Keycloak"
+        ipAddress:
+          type: string
+          description: "IP-адрес"
+        error:
+          type: string
+          description: "Ошибка (если есть)"
+        details:
+          type: object
+          description: "Детали события (email, realm_role и пр.)"
+        resourcePath:
+          type: string
+          description: "Путь к ресурсу"
+        representation:
+          type: string
+          description: "JSON-представление"
+
     KeycloakUserCreated:
       type: object
       required: [userId, email, realmRole]
@@ -2239,6 +2829,8 @@ components:
           description: "Роль пользователя"
 
 tags:
+  - name: "auth"
+    description: "Регистрация пользователей"
   - name: "Health"
     description: "Health Check"
   - name: "suggestions"

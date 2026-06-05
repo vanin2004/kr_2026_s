@@ -12,7 +12,6 @@ import com.tutorplatform.app.SessionManager
 import com.tutorplatform.app.adapters.ApplicationAdapter
 import com.tutorplatform.app.model.Application
 import com.tutorplatform.app.network.ApiClient
-import com.tutorplatform.app.util.ApiFilters
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -50,8 +49,22 @@ class TutorRequestsFragment : Fragment(R.layout.fragment_tutor_requests) {
             try {
                 val apps = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext())
-                        .getApplications(tutorIdFilter = ApiFilters.eq(tutorId))
+                        .getApplications(tutorId = tutorId)
                 }
+                val studentNames = mutableMapOf<String, String>()
+                for (app in apps) {
+                    if (app.student_id !in studentNames) {
+                        try {
+                            val profile = withContext(Dispatchers.IO) {
+                                ApiClient.dataService(requireContext()).getStudentProfile(app.student_id)
+                            }
+                            studentNames[app.student_id] = profile.full_name ?: app.student_id
+                        } catch (_: Exception) {
+                            studentNames[app.student_id] = app.student_id
+                        }
+                    }
+                }
+                adapter.setStudentNames(studentNames)
                 adapter.submitList(apps)
             } catch (ex: Exception) {
                 requireContext().toast("Не удалось загрузить заявки: ${ex.message}")
@@ -67,7 +80,7 @@ class TutorRequestsFragment : Fragment(R.layout.fragment_tutor_requests) {
             try {
                 withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext()).updateApplication(
-                        ApiFilters.eq(application.id),
+                        application.id,
                         mapOf("status" to status)
                     )
                 }

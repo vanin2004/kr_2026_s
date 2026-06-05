@@ -15,6 +15,11 @@ class ApplicationAdapter(
 ) : RecyclerView.Adapter<ApplicationAdapter.ViewHolder>() {
 
     private val items = mutableListOf<Application>()
+    private var studentNames: Map<String, String> = emptyMap()
+
+    fun setStudentNames(names: Map<String, String>) {
+        studentNames = names
+    }
 
     fun submitList(newItems: List<Application>) {
         items.clear()
@@ -30,7 +35,8 @@ class ApplicationAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.title.text = "Ученик ${item.student_id.take(8)}"
+        val studentName = studentNames[item.student_id] ?: "Ученик"
+        holder.title.text = studentName
         holder.subtitle.text = item.created_at ?: "-"
         holder.status.text = "Статус: ${mapStatus(item.status)}"
         holder.accept.setOnClickListener { onAccept(item) }

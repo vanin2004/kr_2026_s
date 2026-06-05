@@ -4,16 +4,17 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -24,47 +25,48 @@ public final class ActivityLessonDetailBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final Button lessonCancel;
+  public final MaterialButton lessonCancel;
 
   @NonNull
-  public final EditText lessonLink;
+  public final TextInputEditText lessonLink;
 
   @NonNull
-  public final Button lessonMarkDone;
+  public final MaterialButton lessonMarkDone;
 
   @NonNull
   public final ProgressBar lessonProgress;
 
   @NonNull
-  public final LinearLayout lessonReviewBlock;
+  public final MaterialCardView lessonReviewBlock;
 
   @NonNull
-  public final EditText lessonReviewScore;
+  public final AutoCompleteTextView lessonReviewScore;
 
   @NonNull
-  public final Button lessonReviewSend;
+  public final MaterialButton lessonReviewSend;
 
   @NonNull
-  public final EditText lessonReviewText;
+  public final TextInputEditText lessonReviewText;
 
   @NonNull
-  public final Button lessonSaveLink;
+  public final MaterialButton lessonSaveLink;
 
   @NonNull
-  public final TextView lessonStatus;
+  public final MaterialTextView lessonStatus;
 
   @NonNull
-  public final TextView lessonTime;
+  public final MaterialTextView lessonTime;
 
   @NonNull
-  public final TextView lessonTitle;
+  public final MaterialTextView lessonTitle;
 
-  private ActivityLessonDetailBinding(@NonNull ScrollView rootView, @NonNull Button lessonCancel,
-      @NonNull EditText lessonLink, @NonNull Button lessonMarkDone,
-      @NonNull ProgressBar lessonProgress, @NonNull LinearLayout lessonReviewBlock,
-      @NonNull EditText lessonReviewScore, @NonNull Button lessonReviewSend,
-      @NonNull EditText lessonReviewText, @NonNull Button lessonSaveLink,
-      @NonNull TextView lessonStatus, @NonNull TextView lessonTime, @NonNull TextView lessonTitle) {
+  private ActivityLessonDetailBinding(@NonNull ScrollView rootView,
+      @NonNull MaterialButton lessonCancel, @NonNull TextInputEditText lessonLink,
+      @NonNull MaterialButton lessonMarkDone, @NonNull ProgressBar lessonProgress,
+      @NonNull MaterialCardView lessonReviewBlock, @NonNull AutoCompleteTextView lessonReviewScore,
+      @NonNull MaterialButton lessonReviewSend, @NonNull TextInputEditText lessonReviewText,
+      @NonNull MaterialButton lessonSaveLink, @NonNull MaterialTextView lessonStatus,
+      @NonNull MaterialTextView lessonTime, @NonNull MaterialTextView lessonTitle) {
     this.rootView = rootView;
     this.lessonCancel = lessonCancel;
     this.lessonLink = lessonLink;
@@ -108,19 +110,19 @@ public final class ActivityLessonDetailBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.lesson_cancel;
-      Button lessonCancel = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton lessonCancel = ViewBindings.findChildViewById(rootView, id);
       if (lessonCancel == null) {
         break missingId;
       }
 
       id = R.id.lesson_link;
-      EditText lessonLink = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText lessonLink = ViewBindings.findChildViewById(rootView, id);
       if (lessonLink == null) {
         break missingId;
       }
 
       id = R.id.lesson_mark_done;
-      Button lessonMarkDone = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton lessonMarkDone = ViewBindings.findChildViewById(rootView, id);
       if (lessonMarkDone == null) {
         break missingId;
       }
@@ -132,49 +134,49 @@ public final class ActivityLessonDetailBinding implements ViewBinding {
       }
 
       id = R.id.lesson_review_block;
-      LinearLayout lessonReviewBlock = ViewBindings.findChildViewById(rootView, id);
+      MaterialCardView lessonReviewBlock = ViewBindings.findChildViewById(rootView, id);
       if (lessonReviewBlock == null) {
         break missingId;
       }
 
       id = R.id.lesson_review_score;
-      EditText lessonReviewScore = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView lessonReviewScore = ViewBindings.findChildViewById(rootView, id);
       if (lessonReviewScore == null) {
         break missingId;
       }
 
       id = R.id.lesson_review_send;
-      Button lessonReviewSend = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton lessonReviewSend = ViewBindings.findChildViewById(rootView, id);
       if (lessonReviewSend == null) {
         break missingId;
       }
 
       id = R.id.lesson_review_text;
-      EditText lessonReviewText = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText lessonReviewText = ViewBindings.findChildViewById(rootView, id);
       if (lessonReviewText == null) {
         break missingId;
       }
 
       id = R.id.lesson_save_link;
-      Button lessonSaveLink = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton lessonSaveLink = ViewBindings.findChildViewById(rootView, id);
       if (lessonSaveLink == null) {
         break missingId;
       }
 
       id = R.id.lesson_status;
-      TextView lessonStatus = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView lessonStatus = ViewBindings.findChildViewById(rootView, id);
       if (lessonStatus == null) {
         break missingId;
       }
 
       id = R.id.lesson_time;
-      TextView lessonTime = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView lessonTime = ViewBindings.findChildViewById(rootView, id);
       if (lessonTime == null) {
         break missingId;
       }
 
       id = R.id.lesson_title;
-      TextView lessonTitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView lessonTitle = ViewBindings.findChildViewById(rootView, id);
       if (lessonTitle == null) {
         break missingId;
       }

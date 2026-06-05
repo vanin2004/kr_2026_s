@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -21,24 +21,25 @@ public final class FragmentTutorDashboardBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final TextView tutorDashboardCommunication;
+  public final MaterialTextView tutorDashboardCommunication;
 
   @NonNull
-  public final TextView tutorDashboardEfficiency;
+  public final MaterialTextView tutorDashboardEfficiency;
 
   @NonNull
   public final ProgressBar tutorDashboardProgress;
 
   @NonNull
-  public final TextView tutorDashboardRating;
+  public final MaterialTextView tutorDashboardRating;
 
   @NonNull
-  public final TextView tutorDashboardStudents;
+  public final MaterialTextView tutorDashboardStudents;
 
   private FragmentTutorDashboardBinding(@NonNull ScrollView rootView,
-      @NonNull TextView tutorDashboardCommunication, @NonNull TextView tutorDashboardEfficiency,
-      @NonNull ProgressBar tutorDashboardProgress, @NonNull TextView tutorDashboardRating,
-      @NonNull TextView tutorDashboardStudents) {
+      @NonNull MaterialTextView tutorDashboardCommunication,
+      @NonNull MaterialTextView tutorDashboardEfficiency,
+      @NonNull ProgressBar tutorDashboardProgress, @NonNull MaterialTextView tutorDashboardRating,
+      @NonNull MaterialTextView tutorDashboardStudents) {
     this.rootView = rootView;
     this.tutorDashboardCommunication = tutorDashboardCommunication;
     this.tutorDashboardEfficiency = tutorDashboardEfficiency;
@@ -75,13 +76,13 @@ public final class FragmentTutorDashboardBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.tutor_dashboard_communication;
-      TextView tutorDashboardCommunication = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDashboardCommunication = ViewBindings.findChildViewById(rootView, id);
       if (tutorDashboardCommunication == null) {
         break missingId;
       }
 
       id = R.id.tutor_dashboard_efficiency;
-      TextView tutorDashboardEfficiency = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDashboardEfficiency = ViewBindings.findChildViewById(rootView, id);
       if (tutorDashboardEfficiency == null) {
         break missingId;
       }
@@ -93,13 +94,13 @@ public final class FragmentTutorDashboardBinding implements ViewBinding {
       }
 
       id = R.id.tutor_dashboard_rating;
-      TextView tutorDashboardRating = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDashboardRating = ViewBindings.findChildViewById(rootView, id);
       if (tutorDashboardRating == null) {
         break missingId;
       }
 
       id = R.id.tutor_dashboard_students;
-      TextView tutorDashboardStudents = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView tutorDashboardStudents = ViewBindings.findChildViewById(rootView, id);
       if (tutorDashboardStudents == null) {
         break missingId;
       }

@@ -4,12 +4,12 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.textview.MaterialTextView;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -20,13 +20,13 @@ public final class ActivitySplashBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
-  public final TextView splashSubtitle;
+  public final MaterialTextView splashSubtitle;
 
   @NonNull
-  public final TextView splashTitle;
+  public final MaterialTextView splashTitle;
 
   private ActivitySplashBinding(@NonNull ConstraintLayout rootView,
-      @NonNull TextView splashSubtitle, @NonNull TextView splashTitle) {
+      @NonNull MaterialTextView splashSubtitle, @NonNull MaterialTextView splashTitle) {
     this.rootView = rootView;
     this.splashSubtitle = splashSubtitle;
     this.splashTitle = splashTitle;
@@ -60,13 +60,13 @@ public final class ActivitySplashBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.splash_subtitle;
-      TextView splashSubtitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView splashSubtitle = ViewBindings.findChildViewById(rootView, id);
       if (splashSubtitle == null) {
         break missingId;
       }
 
       id = R.id.splash_title;
-      TextView splashTitle = ViewBindings.findChildViewById(rootView, id);
+      MaterialTextView splashTitle = ViewBindings.findChildViewById(rootView, id);
       if (splashTitle == null) {
         break missingId;
       }

@@ -1,19 +1,19 @@
-#Thu Jun 04 22:46:24 MSK 2026
-base.0=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
-base.1=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
-base.2=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\10\\classes.dex
-base.3=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\11\\classes.dex
-base.4=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
-base.5=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\3\\classes.dex
-base.6=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
-base.7=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\7\\classes.dex
-base.8=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
-base.9=C\:\\Users\\Anastasia\\Desktop\\Git_Projects\\kr_2026\\kr_2026_s\\android\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
+#Fri Jun 05 08:17:22 MSK 2026
+base.0=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
+base.1=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
+base.2=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/1/classes.dex
+base.3=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/10/classes.dex
+base.4=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/11/classes.dex
+base.5=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/3/classes.dex
+base.6=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/5/classes.dex
+base.7=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/7/classes.dex
+base.8=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/9/classes.dex
+base.9=/mnt/projects/mgtu/kr_2026_s/android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
 path.0=classes.dex
 path.1=0/classes.dex
-path.2=10/classes.dex
-path.3=11/classes.dex
-path.4=1/classes.dex
+path.2=1/classes.dex
+path.3=10/classes.dex
+path.4=11/classes.dex
 path.5=3/classes.dex
 path.6=5/classes.dex
 path.7=7/classes.dex

@@ -1,7 +1,6 @@
 import logging
+import uuid
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from db.session import AsyncSessionLocal
 from models.tables import TutorProfile, TutorTag
 from schemas.suggestions import (
@@ -10,6 +9,8 @@ from schemas.suggestions import (
     SuggestionResponse,
     SuggestionWeights,
 )
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class RecommendationService:
     @staticmethod
     async def get_suggestions(
         request: SuggestionRequest,
-        user_id: str | None = None,
+        user_id: uuid.UUID | None = None,
         session: AsyncSession | None = None,
     ) -> list[SuggestionResponse]:
         if session is None:
@@ -109,13 +110,19 @@ class RecommendationService:
                 + o3 * weights.k3_expertise
                 + o4 * weights.k4_responsiveness
                 + o5 * weights.k5_tags
-            )
+            ) / (
+                weights.k1_effectiveness
+                 + weights.k2_communication
+                 + weights.k3_expertise
+                 + weights.k4_responsiveness
+                 + weights.k5_tags
+                 )
 
             results.append(
                 SuggestionResponse(
                     tutor_id=row.user_id,
                     full_name=row.full_name,
-                score=round(score, 3),
+                    score=round(score, 3),
                     score_breakdown=ScoreBreakdown(
                         o1=round(o1, 3),
                         o2=round(o2, 3),

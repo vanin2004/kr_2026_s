@@ -4,14 +4,15 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -22,20 +23,25 @@ public final class ActivityChatBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final EditText chatInput;
+  public final TextInputEditText chatInput;
 
   @NonNull
   public final RecyclerView chatMessages;
 
   @NonNull
-  public final Button chatSend;
+  public final MaterialButton chatSend;
 
-  private ActivityChatBinding(@NonNull LinearLayout rootView, @NonNull EditText chatInput,
-      @NonNull RecyclerView chatMessages, @NonNull Button chatSend) {
+  @NonNull
+  public final MaterialToolbar chatToolbar;
+
+  private ActivityChatBinding(@NonNull LinearLayout rootView, @NonNull TextInputEditText chatInput,
+      @NonNull RecyclerView chatMessages, @NonNull MaterialButton chatSend,
+      @NonNull MaterialToolbar chatToolbar) {
     this.rootView = rootView;
     this.chatInput = chatInput;
     this.chatMessages = chatMessages;
     this.chatSend = chatSend;
+    this.chatToolbar = chatToolbar;
   }
 
   @Override
@@ -66,7 +72,7 @@ public final class ActivityChatBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.chat_input;
-      EditText chatInput = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText chatInput = ViewBindings.findChildViewById(rootView, id);
       if (chatInput == null) {
         break missingId;
       }
@@ -78,12 +84,19 @@ public final class ActivityChatBinding implements ViewBinding {
       }
 
       id = R.id.chat_send;
-      Button chatSend = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton chatSend = ViewBindings.findChildViewById(rootView, id);
       if (chatSend == null) {
         break missingId;
       }
 
-      return new ActivityChatBinding((LinearLayout) rootView, chatInput, chatMessages, chatSend);
+      id = R.id.chat_toolbar;
+      MaterialToolbar chatToolbar = ViewBindings.findChildViewById(rootView, id);
+      if (chatToolbar == null) {
+        break missingId;
+      }
+
+      return new ActivityChatBinding((LinearLayout) rootView, chatInput, chatMessages, chatSend,
+          chatToolbar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -4,14 +4,14 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.tutorplatform.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -22,20 +22,20 @@ public final class FragmentStudentProfileBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final Button studentProfileLogout;
+  public final MaterialButton studentProfileLogout;
 
   @NonNull
-  public final EditText studentProfileName;
+  public final TextInputEditText studentProfileName;
 
   @NonNull
   public final ProgressBar studentProfileProgress;
 
   @NonNull
-  public final Button studentProfileSave;
+  public final MaterialButton studentProfileSave;
 
   private FragmentStudentProfileBinding(@NonNull ScrollView rootView,
-      @NonNull Button studentProfileLogout, @NonNull EditText studentProfileName,
-      @NonNull ProgressBar studentProfileProgress, @NonNull Button studentProfileSave) {
+      @NonNull MaterialButton studentProfileLogout, @NonNull TextInputEditText studentProfileName,
+      @NonNull ProgressBar studentProfileProgress, @NonNull MaterialButton studentProfileSave) {
     this.rootView = rootView;
     this.studentProfileLogout = studentProfileLogout;
     this.studentProfileName = studentProfileName;
@@ -71,13 +71,13 @@ public final class FragmentStudentProfileBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.student_profile_logout;
-      Button studentProfileLogout = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton studentProfileLogout = ViewBindings.findChildViewById(rootView, id);
       if (studentProfileLogout == null) {
         break missingId;
       }
 
       id = R.id.student_profile_name;
-      EditText studentProfileName = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText studentProfileName = ViewBindings.findChildViewById(rootView, id);
       if (studentProfileName == null) {
         break missingId;
       }
@@ -89,7 +89,7 @@ public final class FragmentStudentProfileBinding implements ViewBinding {
       }
 
       id = R.id.student_profile_save;
-      Button studentProfileSave = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton studentProfileSave = ViewBindings.findChildViewById(rootView, id);
       if (studentProfileSave == null) {
         break missingId;
       }

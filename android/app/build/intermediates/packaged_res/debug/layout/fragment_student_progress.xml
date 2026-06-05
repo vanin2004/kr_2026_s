@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_light">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,20 +12,20 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_lg">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Прогресс"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
             android:text="Результаты тестов"
-            android:textColor="@color/text_secondary" />
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/student_results_list"
@@ -40,13 +41,13 @@
             android:layout_marginTop="@dimen/spacing_sm"
             android:visibility="gone" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_lg"
             android:text="Доступные тесты"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold" />
+            android:textColor="?attr/colorOnSurface"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/student_tests_list"

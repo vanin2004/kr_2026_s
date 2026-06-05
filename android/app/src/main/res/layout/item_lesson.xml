@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_sm"
+    android:layout_marginBottom="@dimen/spacing_sm"
+    android:fitsSystemWindows="true"
+    app:cardElevation="2dp"
+    style="?attr/materialCardViewElevatedStyle">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_md">
+
+        <!-- Цветной индикатор преподавателя -->
+        <View
+            android:id="@+id/lesson_color_bar"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/spacing_md"
+            android:background="@drawable/rounded_rect_shape" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Дата -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lesson_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="15 марта"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                android:textColor="?attr/colorOnSurface" />
+
+            <!-- Время -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lesson_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="14:00 — 15:30"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+            <!-- Преподаватель -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lesson_tutor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Иванов И.И."
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurface" />
+
+            <!-- Статус -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lesson_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Запланирован"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorPrimary" />
+
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

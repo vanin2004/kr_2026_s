@@ -4,29 +4,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient">
+    android:fitsSystemWindows="true">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/splash_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Платформа репетиторов"
-        android:textColor="@color/white"
         android:textSize="28sp"
-        android:textStyle="bold"
-        android:fontFamily="serif"
         app:layout_constraintBottom_toTopOf="@id/splash_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintVertical_chainStyle="packed"
+        android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/splash_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Подбор и планирование уроков"
-        android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/splash_title"
         app:layout_constraintEnd_toEndOf="parent"

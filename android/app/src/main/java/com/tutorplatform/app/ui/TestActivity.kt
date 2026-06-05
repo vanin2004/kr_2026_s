@@ -1,7 +1,9 @@
 package com.tutorplatform.app.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.RadioButton
@@ -41,13 +43,14 @@ class TestActivity : AppCompatActivity() {
     private var currentIndex = 0
     private var correctCount = 0
 
-    private var testId: Int = -1
+    private var testId: String? = null
     private lateinit var studentId: String
     private lateinit var tutorId: String
     private lateinit var testType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= 35) { enableEdgeToEdge() }
         setContentView(R.layout.activity_test)
 
         progressView = findViewById(R.id.test_progress)
@@ -65,12 +68,12 @@ class TestActivity : AppCompatActivity() {
         )
 
         val rawJson = intent.getStringExtra(EXTRA_QUESTIONS_JSON)
-        testId = intent.getIntExtra(EXTRA_TEST_ID, -1)
+        testId = intent.getStringExtra(EXTRA_TEST_ID)
         studentId = intent.getStringExtra(EXTRA_STUDENT_ID).orEmpty()
         tutorId = intent.getStringExtra(EXTRA_TUTOR_ID).orEmpty()
         testType = intent.getStringExtra(EXTRA_TEST_TYPE).orEmpty()
 
-        if (rawJson.isNullOrBlank() || testId == -1 || studentId.isBlank() || tutorId.isBlank() || testType.isBlank()) {
+        if (rawJson.isNullOrBlank() || testId.isNullOrBlank() || studentId.isBlank() || tutorId.isBlank() || testType.isBlank()) {
             toast("Не удалось загрузить тест")
             finish()
             return
@@ -143,7 +146,7 @@ class TestActivity : AppCompatActivity() {
                         StudentResultCreate(
                             student_id = studentId,
                             tutor_id = tutorId,
-                            test_id = testId,
+                            test_id = testId!!,
                             type = testType,
                             score = score
                         )

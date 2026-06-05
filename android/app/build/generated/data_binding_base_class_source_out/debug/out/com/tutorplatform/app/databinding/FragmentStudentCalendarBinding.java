@@ -4,6 +4,7 @@ package com.tutorplatform.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
@@ -21,14 +22,19 @@ public final class FragmentStudentCalendarBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final CalendarView studentCalendarView;
+
+  @NonNull
   public final RecyclerView studentLessonsList;
 
   @NonNull
   public final ProgressBar studentLessonsProgress;
 
   private FragmentStudentCalendarBinding(@NonNull LinearLayout rootView,
-      @NonNull RecyclerView studentLessonsList, @NonNull ProgressBar studentLessonsProgress) {
+      @NonNull CalendarView studentCalendarView, @NonNull RecyclerView studentLessonsList,
+      @NonNull ProgressBar studentLessonsProgress) {
     this.rootView = rootView;
+    this.studentCalendarView = studentCalendarView;
     this.studentLessonsList = studentLessonsList;
     this.studentLessonsProgress = studentLessonsProgress;
   }
@@ -60,6 +66,12 @@ public final class FragmentStudentCalendarBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.student_calendar_view;
+      CalendarView studentCalendarView = ViewBindings.findChildViewById(rootView, id);
+      if (studentCalendarView == null) {
+        break missingId;
+      }
+
       id = R.id.student_lessons_list;
       RecyclerView studentLessonsList = ViewBindings.findChildViewById(rootView, id);
       if (studentLessonsList == null) {
@@ -72,8 +84,8 @@ public final class FragmentStudentCalendarBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentStudentCalendarBinding((LinearLayout) rootView, studentLessonsList,
-          studentLessonsProgress);
+      return new FragmentStudentCalendarBinding((LinearLayout) rootView, studentCalendarView,
+          studentLessonsList, studentLessonsProgress);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

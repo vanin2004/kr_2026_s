@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import com.tutorplatform.app.R
 import com.tutorplatform.app.SessionManager
 import com.tutorplatform.app.network.ApiClient
-import com.tutorplatform.app.util.ApiFilters
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -40,22 +39,29 @@ class TutorDashboardFragment : Fragment(R.layout.fragment_tutor_dashboard) {
         progress.show(true)
         lifecycleScope.launch {
             try {
-                val profiles = withContext(Dispatchers.IO) {
+                val profile = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext())
-                        .getTutorProfiles(ApiFilters.eq(tutorId))
+                        .getTutorProfile(tutorId)
                 }
-                val profile = profiles.firstOrNull()
-                if (profile != null) {
-                    ratingView.text = "Общий рейтинг: ${profile.rating_overall ?: 0.0}"
-                    efficiencyView.text = "Эффективность: ${profile.rating_efficiency ?: 0.0}"
-                    communicationView.text = "Коммуникация: ${profile.rating_communication ?: 0.0}"
-                    studentsView.text = "Активные ученики: ${profile.student_count ?: 0}"
-                }
+                val avgRating = listOfNotNull(
+                    profile.rating_efficiency,
+                    profile.rating_communication,
+                    profile.rating_expertise,
+                    profile.rating_responsiveness
+                ).let { list -> if (list.isNotEmpty()) list.average() else 0.0 }
+                ratingView.text = "Общий рейтинг: ${"%.0f%%".format(avgRating * 100)}"
+                efficiencyView.text = "Эффективность: ${formatRatingPct(profile.rating_efficiency)}"
+                communicationView.text = "Коммуникация: ${formatRatingPct(profile.rating_communication)}"
+                studentsView.text = "Активные ученики: ${profile.student_count ?: 0}"
             } catch (ex: Exception) {
                 requireContext().toast("Не удалось загрузить профиль: ${ex.message}")
             } finally {
                 progress.show(false)
             }
         }
+    }
+
+    private fun formatRatingPct(value: Double?): String {
+        return if (value != null) "%.0f%%".format(value * 100) else "—"
     }
 }

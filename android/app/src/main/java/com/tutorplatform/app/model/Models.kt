@@ -1,7 +1,5 @@
 package com.tutorplatform.app.model
 
-import java.util.UUID
-
 data class TokenResponse(
     val access_token: String,
     val refresh_token: String?
@@ -10,32 +8,40 @@ data class TokenResponse(
 data class TutorProfile(
     val user_id: String,
     val full_name: String,
+    val photo_url: String?,
     val education: String?,
-    val specialization: String?,
+    val subject_id: String?,
     val hourly_rate: Int?,
     val experience_years: Int?,
-    val rating_overall: Double?,
+    val is_verified: Boolean?,
+    val student_count: Int?,
     val rating_efficiency: Double?,
     val rating_communication: Double?,
-    val student_count: Int?
+    val rating_expertise: Double?,
+    val rating_responsiveness: Double?,
+    val is_new_boost: Boolean?
 )
 
 data class StudentProfile(
     val user_id: String,
-    val full_name: String
+    val full_name: String?,
+    val photo_url: String?,
+    val search_weights: Any?
 )
 
 data class ScheduleSlot(
     val id: Int,
     val tutor_id: String,
-    val day_of_week: Int,
+    val day_of_week: Int?,
+    val specific_date: String?,
     val start_time: String,
     val end_time: String
 )
 
 data class ScheduleSlotCreate(
     val tutor_id: String,
-    val day_of_week: Int,
+    val day_of_week: Int? = null,
+    val specific_date: String? = null,
     val start_time: String,
     val end_time: String
 )
@@ -55,7 +61,6 @@ data class LessonCreate(
     val tutor_id: String,
     val start_datetime: String,
     val end_datetime: String,
-    val status: String = "planned",
     val meeting_link: String? = null
 )
 
@@ -64,13 +69,13 @@ data class Application(
     val student_id: String,
     val tutor_id: String,
     val status: String,
-    val created_at: String?
+    val created_at: String?,
+    val responded_at: String?
 )
 
 data class ApplicationCreate(
     val student_id: String,
-    val tutor_id: String,
-    val status: String = "pending"
+    val tutor_id: String
 )
 
 data class Chat(
@@ -84,6 +89,7 @@ data class Message(
     val chat_id: String,
     val sender_id: String,
     val text: String,
+    val is_read: Boolean?,
     val created_at: String?
 )
 
@@ -97,7 +103,7 @@ data class StudentResult(
     val id: String,
     val student_id: String,
     val tutor_id: String,
-    val test_id: Int,
+    val test_id: String,
     val type: String,
     val score: Double?,
     val assigned_at: String?,
@@ -107,16 +113,16 @@ data class StudentResult(
 data class StudentResultCreate(
     val student_id: String,
     val tutor_id: String,
-    val test_id: Int,
+    val test_id: String,
     val type: String,
-    val score: Double?
+    val score: Double? = null
 )
 
 data class TestLibrary(
-    val id: Int,
-    val subject: String,
+    val id: String,
+    val subject_id: String,
     val topic: String,
-    val questions_json: String
+    val questions_json: Any?
 )
 
 data class Review(
@@ -137,25 +143,79 @@ data class ReviewCreate(
     val text: String?
 )
 
+// ─── Suggestions ────────────────────────────────────────────────
+
+data class SuggestionWeights(
+    val k1_effectiveness: Double = 0.30,
+    val k2_communication: Double = 0.15,
+    val k3_expertise: Double = 0.20,
+    val k4_responsiveness: Double = 0.15,
+    val k5_tags: Double = 0.20
+)
+
+data class SuggestionScheduleSlot(
+    val day_of_week: Int,
+    val start_time: String,
+    val end_time: String
+)
+
 data class SuggestionRequest(
-    val subject: String?,
-    val max_rate: Int?,
-    val min_experience: Int?,
-    val weight_efficiency: Double,
-    val weight_communication: Double,
-    val weight_expertise: Double,
-    val weight_responsiveness: Double,
-    val weight_tags: Double,
-    val desired_tags: List<String>
+    val subject_id: String,
+    val max_price: Int? = null,
+    val min_experience: Int? = null,
+    val verified_only: Boolean? = null,
+    val schedule_slots: List<SuggestionScheduleSlot>? = null,
+    val required_tag_ids: List<String>? = null,
+    val weights: SuggestionWeights? = null
+)
+
+data class ScoreBreakdown(
+    val o1: Double?,
+    val o2: Double?,
+    val o3: Double?,
+    val o4: Double?,
+    val o5: Double?
 )
 
 data class TutorSuggestion(
-    val user_id: UUID,
-    val full_name: String,
-    val specialization: String?,
+    val tutor_id: String,
+    val full_name: String?,
+    val score: Double,
+    val score_breakdown: ScoreBreakdown?,
     val hourly_rate: Int?,
-    val experience_years: Int?,
-    val match_score: Double
+    val is_new: Boolean?
+)
+
+data class Subject(
+    val id: String,
+    val name: String
+)
+
+data class Tag(
+    val id: String,
+    val name: String
+)
+
+data class TutorTag(
+    val tutor_id: String,
+    val tag_id: String
+)
+
+// ─── Auth (Register) ───────────────────────────────────────────
+
+data class RegisterRequest(
+    val username: String,
+    val password: String,
+    val full_name: String,
+    val role: String,
+    val subject_id: String? = null,
+    val hourly_rate: Int? = null
+)
+
+data class RegisterResponse(
+    val user_id: String?,
+    val username: String?,
+    val role: String?
 )
 
 data class SimpleItem(

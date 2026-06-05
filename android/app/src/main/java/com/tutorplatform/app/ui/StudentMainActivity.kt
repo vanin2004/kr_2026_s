@@ -1,6 +1,8 @@
 package com.tutorplatform.app.ui
 
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -14,6 +16,7 @@ import com.tutorplatform.app.ui.student.StudentSearchFragment
 class StudentMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= 35) { enableEdgeToEdge() }
         setContentView(R.layout.activity_student_main)
 
         val nav = findViewById<BottomNavigationView>(R.id.student_bottom_nav)

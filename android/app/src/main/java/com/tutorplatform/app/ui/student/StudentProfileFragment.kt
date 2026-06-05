@@ -12,7 +12,6 @@ import com.tutorplatform.app.R
 import com.tutorplatform.app.SessionManager
 import com.tutorplatform.app.network.ApiClient
 import com.tutorplatform.app.ui.LoginActivity
-import com.tutorplatform.app.util.ApiFilters
 import com.tutorplatform.app.util.show
 import com.tutorplatform.app.util.toast
 import kotlinx.coroutines.Dispatchers
@@ -45,14 +44,11 @@ class StudentProfileFragment : Fragment(R.layout.fragment_student_profile) {
         progress.show(true)
         lifecycleScope.launch {
             try {
-                val profiles = withContext(Dispatchers.IO) {
+                val profile = withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext())
-                        .getStudentProfiles(ApiFilters.eq(studentId))
+                        .getStudentProfile(studentId)
                 }
-                val profile = profiles.firstOrNull()
-                if (profile != null) {
-                    nameInput.setText(profile.full_name)
-                }
+                nameInput.setText(profile.full_name ?: "")
             } catch (ex: Exception) {
                 requireContext().toast("Не удалось загрузить профиль: ${ex.message}")
             } finally {
@@ -73,7 +69,7 @@ class StudentProfileFragment : Fragment(R.layout.fragment_student_profile) {
             try {
                 withContext(Dispatchers.IO) {
                     ApiClient.dataService(requireContext()).updateStudentProfile(
-                        ApiFilters.eq(studentId),
+                        studentId,
                         mapOf("full_name" to nameInput.text.toString().trim())
                     )
                 }

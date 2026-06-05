@@ -7,12 +7,12 @@ CREATE TYPE device_platform AS ENUM ('android', 'ios');
 
 -- 1. Справочники
 CREATE TABLE subjects (
-    id    SERIAL PRIMARY KEY,
+    id    UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name  VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE tags (
-    id    SERIAL PRIMARY KEY,
+    id    UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name  VARCHAR(100) NOT NULL UNIQUE
 );
 
@@ -30,7 +30,7 @@ CREATE TABLE tutor_profiles (
     full_name             VARCHAR(255),
     photo_url             VARCHAR(500),
     education             TEXT,
-    subject_id            INT REFERENCES subjects(id),
+    subject_id            UUID REFERENCES subjects(id),
     hourly_rate           INT,
     experience_years      INT DEFAULT 0,
     is_verified           BOOLEAN NOT NULL DEFAULT FALSE,
@@ -58,13 +58,13 @@ CREATE TABLE student_profiles (
 -- 4. Теги
 CREATE TABLE tutor_tags (
     tutor_id  UUID REFERENCES users(id) ON DELETE CASCADE,
-    tag_id    INT  REFERENCES tags(id)  ON DELETE CASCADE,
+    tag_id    UUID REFERENCES tags(id)  ON DELETE CASCADE,
     PRIMARY KEY (tutor_id, tag_id)
 );
 
 CREATE TABLE student_preferred_tags (
     student_id  UUID REFERENCES users(id) ON DELETE CASCADE,
-    tag_id      INT  REFERENCES tags(id)  ON DELETE CASCADE,
+    tag_id      UUID REFERENCES tags(id)  ON DELETE CASCADE,
     is_required BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (student_id, tag_id)
 );
@@ -139,8 +139,8 @@ CREATE INDEX messages_chat_idx ON messages(chat_id, created_at DESC);
 
 -- 10. Тестирование
 CREATE TABLE test_library (
-    id            SERIAL PRIMARY KEY,
-    subject_id    INT  NOT NULL REFERENCES subjects(id),
+    id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    subject_id    UUID NOT NULL REFERENCES subjects(id),
     topic         VARCHAR(255) NOT NULL,
     questions_json JSONB NOT NULL
 );
@@ -149,7 +149,7 @@ CREATE TABLE student_results (
     id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     student_id   UUID NOT NULL REFERENCES users(id),
     tutor_id     UUID NOT NULL REFERENCES users(id),
-    test_id      INT  NOT NULL REFERENCES test_library(id),
+    test_id      UUID NOT NULL REFERENCES test_library(id),
     type         result_type NOT NULL,
     score        DECIMAL(5,2),
     assigned_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
