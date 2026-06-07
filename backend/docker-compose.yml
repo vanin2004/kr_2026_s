@@ -26,7 +26,6 @@ services:
       - ./app/src:/app/src:ro
     env_file: .env
     environment:
-      # Override — inside the Docker network Keycloak is at container name
       KEYCLOAK_URL: http://keycloak:8080/auth
     depends_on:
       db:
